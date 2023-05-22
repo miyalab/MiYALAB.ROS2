@@ -20,10 +20,7 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_components REQUIRED)
 find_package(std_msgs REQUIRED)
-find_package(std_srvs REQUIRED)
-find_package(nav_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
-find_package(geometry_msgs REQUIRED)
 
 include_directories(
   include
@@ -38,7 +35,7 @@ ament_target_dependencies(${PROJECT_NAME}
   std_msgs
   sensor_msgs
 )
-rclcpp_components_register_nodes(${PROJECT_NAME} "Mercurius::ROS2RobotRun")
+rclcpp_components_register_nodes(${PROJECT_NAME} "MiYALAB::ROS2::Joystick")
 
 install(TARGETS ${PROJECT_NAME} DESTINATION lib)
 

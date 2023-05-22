@@ -1,0 +1,3 @@
+joystick:
+  path: "/dev/input/js2"
+  rate: 20
