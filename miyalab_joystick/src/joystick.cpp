@@ -89,22 +89,20 @@ void Joystick::run()
     RCLCPP_INFO_STREAM(this->get_logger(), this->get_name() << " has started. thread id = " << std::this_thread::get_id());
     
     // Main loop
-    bool is_connected_before = false;
     std::vector<float> axes;
     std::vector<int> buttons;
     for(rclcpp::WallRate loop(this->rate); rclcpp::ok(); loop.sleep()){
-        // 接続状態
         std_msgs::msg::Bool is_connected_msg;
         is_connected_msg.data = std::filesystem::exists(this->device_path);
         
         // publishデータ
         sensor_msgs::msg::Joy::UniquePtr state_msg = std::make_unique<sensor_msgs::msg::Joy>();
-        state_msg->header.frame_id = device_name;
-        state_msg->header.stamp = this->now();
+        state_msg->header.frame_id = this->device_name;
+        state_msg->header.stamp    = this->now();
 
-        // connect -> connect
-        if(is_connected_msg.data && is_connected_before){
-            // RCLCPP_INFO(this->get_logger(), "connected");
+        // connect
+        if(this->handler >= 0){
+            //RCLCPP_INFO(this->get_logger(), "connected");
             js_event js;
             while(read(this->handler, &js, sizeof(js_event)) > 0){
                 switch(js.type & ~JS_EVENT_INIT){
@@ -120,15 +118,15 @@ void Joystick::run()
             state_msg->buttons = buttons;
         }
         // connect -> disconnect
-        else if(!is_connected_msg.data && is_connected_before){
-            // RCLCPP_INFO(this->get_logger(), "disconnected");
+        else if(!is_connected_msg.data && this->handler >= 0){
+            //RCLCPP_INFO(this->get_logger(), "disconnected");
             close(this->handler);
             this->handler = -1;
             this->device_name = "";
         }
         // disconnect -> connect
-        else if(is_connected_msg.data && !is_connected_before){
-            // RCLCPP_INFO(this->get_logger(), "connect");
+        else if(is_connected_msg.data && this->handler < 0){
+            //RCLCPP_INFO(this->get_logger(), "connect");
             this->handler = open(this->device_path.c_str(), O_RDONLY);
             if(this->handler >= 0){
                 int axis_size = 0;
@@ -142,17 +140,12 @@ void Joystick::run()
                 this->device_name = buf;
                 fcntl(this->handler, F_SETFL, O_NONBLOCK);
             }
-            else{
-                RCLCPP_ERROR(this->get_logger(), "%s not found!", device_path.c_str());
-            }
+            else RCLCPP_ERROR(this->get_logger(), "%s connect error!", device_path.c_str());
         }
 
         // publish
         state_publisher->publish(std::move(state_msg));
         is_connected_publisher->publish(is_connected_msg);
-
-        // loop processing
-        is_connected_before = is_connected_msg.data;
     }
 
     RCLCPP_INFO(this->get_logger(), "%s has stoped.", this->get_name());

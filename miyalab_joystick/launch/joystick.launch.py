@@ -28,7 +28,7 @@ def generate_launch_description():
                 remappings=[
                     # publisher
                     ("~/state",        "~/state"),
-                    ("~/is_connected", "~/is_connected"),
+                    ("~/is_connected", "~/is_connected")
                 ],
                 extra_arguments=[{'use_intra_process_comms': True}]
             )
