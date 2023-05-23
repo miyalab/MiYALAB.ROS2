@@ -46,6 +46,7 @@ Joystick::Joystick(rclcpp::NodeOptions options) : rclcpp::Node("joystick", optio
     RCLCPP_INFO(this->get_logger(), "Initialize parameters...");
     this->device_path = this->declare_parameter("joystick.path", "/dev/input/js0");
     this->rate        = this->declare_parameter("joystick.rate", 20);
+    this->dead_zone   = this->declare_parameter("joystick.dead_zone", 0.05);
     RCLCPP_INFO(this->get_logger(), "Complete! Parameters were initialized.");
 
     // Initialize subscriber
@@ -108,6 +109,7 @@ void Joystick::run()
                 switch(js.type & ~JS_EVENT_INIT){
                 case JS_EVENT_AXIS:
                     axes[js.number] = (float)js.value / 32767;
+                    axes[js.number] *= (axes[js.number] <= -dead_zone || dead_zone <= axes[js.number]);
                     break;
                 case JS_EVENT_BUTTON:
                     buttons[js.number] = js.value;

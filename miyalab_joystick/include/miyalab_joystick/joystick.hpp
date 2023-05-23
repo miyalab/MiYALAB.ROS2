@@ -38,6 +38,7 @@ public:
 private:
     // joystick関連
     int handler = -1;
+    float dead_zone;
     std::string device_name;
     std::string device_path;
     rclcpp::Publisher<sensor_msgs::msg::Joy>::SharedPtr state_publisher;
