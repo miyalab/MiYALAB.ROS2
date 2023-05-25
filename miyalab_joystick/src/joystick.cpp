@@ -102,7 +102,7 @@ void Joystick::run()
         state_msg->header.stamp    = this->now();
 
         // connect
-        if(this->handler >= 0){
+        if(is_connected_msg.data && this->handler >= 0){
             //RCLCPP_INFO(this->get_logger(), "connected");
             js_event js;
             while(read(this->handler, &js, sizeof(js_event)) > 0){
