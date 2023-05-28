@@ -44,9 +44,9 @@ Joystick::Joystick(rclcpp::NodeOptions options) : rclcpp::Node("joystick", optio
 
     // Initialize parameters
     RCLCPP_INFO(this->get_logger(), "Initialize parameters...");
-    this->device_path = this->declare_parameter("joystick.path", "/dev/input/js0");
-    this->rate        = this->declare_parameter("joystick.rate", 20);
-    this->dead_zone   = this->declare_parameter("joystick.dead_zone", 0.05);
+    this->forceSet(&this->DEVICE_PATH, this->declare_parameter("joystick.path", "/dev/input/js0"));
+    this->forceSet(&this->RATE       , this->declare_parameter("joystick.rate", 20));
+    this->forceSet(&this->DEAD_ZONE  , this->declare_parameter("joystick.dead_zone", 0.05));
     RCLCPP_INFO(this->get_logger(), "Complete! Parameters were initialized.");
 
     // Initialize subscriber
@@ -92,9 +92,9 @@ void Joystick::run()
     // Main loop
     std::vector<float> axes;
     std::vector<int> buttons;
-    for(rclcpp::WallRate loop(this->rate); rclcpp::ok(); loop.sleep()){
+    for(rclcpp::WallRate loop(this->RATE); rclcpp::ok(); loop.sleep()){
         std_msgs::msg::Bool is_connected_msg;
-        is_connected_msg.data = std::filesystem::exists(this->device_path);
+        is_connected_msg.data = std::filesystem::exists(this->DEVICE_PATH);
         
         // publishデータ
         sensor_msgs::msg::Joy::UniquePtr state_msg = std::make_unique<sensor_msgs::msg::Joy>();
@@ -109,7 +109,7 @@ void Joystick::run()
                 switch(js.type & ~JS_EVENT_INIT){
                 case JS_EVENT_AXIS:
                     axes[js.number] = (float)js.value / 32767;
-                    axes[js.number] *= (axes[js.number] <= -dead_zone || dead_zone <= axes[js.number]);
+                    axes[js.number] *= (axes[js.number] <= -this->DEAD_ZONE || this->DEAD_ZONE <= axes[js.number]);
                     break;
                 case JS_EVENT_BUTTON:
                     buttons[js.number] = js.value;
@@ -129,7 +129,7 @@ void Joystick::run()
         // disconnect -> connect
         else if(is_connected_msg.data && this->handler < 0){
             //RCLCPP_INFO(this->get_logger(), "connect");
-            this->handler = open(this->device_path.c_str(), O_RDONLY);
+            this->handler = open(this->DEVICE_PATH.c_str(), O_RDONLY);
             if(this->handler >= 0){
                 int axis_size = 0;
                 int button_size = 0;
@@ -142,7 +142,7 @@ void Joystick::run()
                 this->device_name = buf;
                 fcntl(this->handler, F_SETFL, O_NONBLOCK);
             }
-            else RCLCPP_ERROR(this->get_logger(), "%s connect error!", device_path.c_str());
+            else RCLCPP_ERROR(this->get_logger(), "%s connect error!", DEVICE_PATH.c_str());
         }
 
         // publish
