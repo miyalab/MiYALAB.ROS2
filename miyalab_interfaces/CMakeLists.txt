@@ -21,6 +21,9 @@ find_package(rosidl_default_generators REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 
+set(msg_files
+  msg/RobotState.msg
+)
 set(srv_files
   srv/SetInt32.srv
   srv/SetInt64.srv
@@ -30,7 +33,7 @@ set(srv_files
   srv/SetPose.srv
 )
 rosidl_generate_interfaces(${PROJECT_NAME}
-  #${msg_files}
+  ${msg_files}
   ${srv_files}
   #${act_files}
   DEPENDENCIES geometry_msgs std_msgs
