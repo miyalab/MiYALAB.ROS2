@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>miyalab_joystick</name>
+  <name>miyalab_manual_robot_controller</name>
   <version>1.0.0</version>
-  <description>This package is joystick node for ros2</description>
+  <description>This package is manual robot controller for ROS2</description>
   <maintainer email="kmiyauchi@miya-lab.com">k.miyauchi</maintainer>
   <license>MIT</license>
 
@@ -12,7 +12,9 @@
   <depend>rclcpp</depend>
   <depend>rclcpp_components</depend>
   <depend>std_msgs</depend>
+  <depend>std_srvs</depend>
   <depend>sensor_msgs</depend>
+  <depend>geometry_msgs</depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
