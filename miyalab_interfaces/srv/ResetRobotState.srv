@@ -1,0 +1,7 @@
+geometry_msgs/Pose pose
+float64 distance
+bool is_distance
+bool is_pose
+---
+bool success
+string message

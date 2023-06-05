@@ -33,6 +33,7 @@ set(srv_files
   srv/SetFloat64.srv
   srv/SetString.srv
   srv/SetPose.srv
+  srv/ResetRobotState.srv
 )
 rosidl_generate_interfaces(${PROJECT_NAME}
   ${msg_files}
