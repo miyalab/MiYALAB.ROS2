@@ -6,11 +6,11 @@ controller_2d:
     slow_num    : 5   # JOY_RIGHT_TRIGGER
     fast_num    : 2   # JOY_LEFT_TRIGGER
   linear:
-    gain: 1.0
+    gain: -1.0
     x_num: 1    # JOY_LEFT_Y
     y_num: 0    # JOY_LEFT_X
   angular:
-    gain: 1.0
+    gain: -1.0
     z_num: 3    # JOY_RIGHT_X
     
   
