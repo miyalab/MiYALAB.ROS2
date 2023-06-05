@@ -21,10 +21,8 @@ find_package(rclcpp REQUIRED)
 find_package(rclcpp_components REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(std_srvs REQUIRED)
-find_package(nav_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
-find_package(mercurius_interfaces REQUIRED)
 
 include_directories(
   include
@@ -41,7 +39,7 @@ ament_target_dependencies(${PROJECT_NAME}
   sensor_msgs
   geometry_msgs
 )
-rclcpp_components_register_nodes(${PROJECT_NAME} "MiYALAB::ROS2::ManualRobotCotroller2D")
+rclcpp_components_register_nodes(${PROJECT_NAME} "MiYALAB::ROS2::ManualRobotController2D")
 
 install(TARGETS ${PROJECT_NAME} DESTINATION lib)
 

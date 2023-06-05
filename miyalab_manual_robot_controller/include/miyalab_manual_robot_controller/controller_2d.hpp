@@ -57,8 +57,16 @@ private:
                           const std_srvs::srv::SetBool::Response::SharedPtr response);
 
     // 処理用
-    const int RATE = -1;
-    const double GAIN = -0.0;
+    const int LOOP_RATE = -1;
+    const int ACTIVE_BUTTON_NUM = -1;
+    const int INACTIVE_BUTTON_NUM = -1;
+    const double LINEAR_GAIN = -0.0;
+    const double ANGULAR_GAIN = -0.0;
+    const int LINEAR_X_JOY_NUM = -1;
+    const int LINEAR_Y_JOY_NUM = -1;
+    const int ANGULAR_Z_JOY_NUM = -1;
+    const int SLOW_TRIGGER_NUM = -1;
+    const int FAST_TRIGGER_NUM = -1;
     template<typename T, typename U>void forceSet(const T *value, const U &set){*((T*)value)=set;}
     std::unique_ptr<std::thread> thread;
     void run();

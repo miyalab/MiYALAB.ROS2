@@ -20,34 +20,6 @@ using sensor_msgs::msg::Joy;
 using geometry_msgs::msg::Twist;
 
 //-----------------------------
-// enum
-//-----------------------------
-enum class LOGICOOL_BUTTON{
-    A,
-    B,
-    X,
-    Y,
-    LB,
-    RB,
-    BACK,
-    START,
-    LOGICOOL,
-    JOY_LEFT,
-    JOY_RIGHT
-};
-
-enum class LOGICOOL_ANALOG{
-    JOY_LEFT_X,
-    JOY_LEFT_Y,
-    LT,
-    JOY_RIGHT_X,
-    JOY_RIGHT_Y,
-    RT,
-    CURSOR_X,
-    CURSOR_Y
-};
-
-//-----------------------------
 // Methods
 //-----------------------------
 /**
@@ -70,8 +42,16 @@ ManualRobotController2D::ManualRobotController2D(rclcpp::NodeOptions options) : 
 
     // Initialize parameters
     RCLCPP_INFO(this->get_logger(), "Initialize parameters...");
-    this->forceSet(&this->RATE, this->declare_parameter("robot_run.rate", 30));
-    this->forceSet(&this->GAIN, this->declare_parameter("robot_run.gain", 1.0));
+    this->forceSet(&this->LOOP_RATE          , this->declare_parameter("controller_2d.rate", 30));
+    this->forceSet(&this->ACTIVE_BUTTON_NUM  , this->declare_parameter("controller_2d.trigger.active_num", 9));
+    this->forceSet(&this->INACTIVE_BUTTON_NUM, this->declare_parameter("controller_2d.trigger.inactive_mum", 10));
+    this->forceSet(&this->SLOW_TRIGGER_NUM   , this->declare_parameter("controller_2d.trigger.slow_num", 5));
+    this->forceSet(&this->FAST_TRIGGER_NUM   , this->declare_parameter("controller_2d.trigger.fast_num", 2));
+    this->forceSet(&this->LINEAR_GAIN        , this->declare_parameter("controller_2d.linear.gain", 1.0));
+    this->forceSet(&this->LINEAR_X_JOY_NUM   , this->declare_parameter("controller_2d.linear.x_num", 1));
+    this->forceSet(&this->LINEAR_Y_JOY_NUM   , this->declare_parameter("controller_2d.linear.y_num", 0));
+    this->forceSet(&this->ANGULAR_GAIN       , this->declare_parameter("controller_2d.angular.gain", 1.0));
+    this->forceSet(&this->ANGULAR_Z_JOY_NUM  , this->declare_parameter("controller_2d.angular.z_num", 3));
     RCLCPP_INFO(this->get_logger(), "Complete! Parameters were initialized.");
 
     // Initialize subscriber
@@ -137,7 +117,7 @@ void ManualRobotController2D::run()
     std_msgs::msg::Bool is_active_msg;
     
     // Main loop
-    for(rclcpp::WallRate loop(this->RATE); rclcpp::ok(); loop.sleep()){
+    for(rclcpp::WallRate loop(this->LOOP_RATE); rclcpp::ok(); loop.sleep()){
         // joystick入力状態 ラッチ
         this->joy_state_mutex.lock();
         const auto joy = this->joy_state;
@@ -151,8 +131,8 @@ void ManualRobotController2D::run()
         is_active_msg.data = this->is_active;
 
         // キー入力によるアクティブ状態変更
-        is_active_msg.data = is_active_msg.data ||  joy->buttons[static_cast<int>(LOGICOOL_BUTTON::JOY_LEFT)];
-        is_active_msg.data = is_active_msg.data && !joy->buttons[static_cast<int>(LOGICOOL_BUTTON::JOY_RIGHT)];
+        is_active_msg.data = is_active_msg.data ||  joy->buttons[this->ACTIVE_BUTTON_NUM];
+        is_active_msg.data = is_active_msg.data && !joy->buttons[this->INACTIVE_BUTTON_NUM];
         is_active_publisher->publish(is_active_msg);
         this->is_active = is_active_msg.data;
         this->is_active_mutex.unlock();
@@ -160,13 +140,20 @@ void ManualRobotController2D::run()
         // active時のみ処理
         if(is_active_msg.data){
             // 直進方向速度ゲイン
-            double gain = -this->GAIN;
-            if(joy->axes[static_cast<int>(LOGICOOL_ANALOG::RT)] > 0.0) gain /= 2;
-            
+            double linear_gain = this->LINEAR_GAIN;
+            double angular_gain = this->ANGULAR_GAIN;
+            if(joy->axes[this->SLOW_TRIGGER_NUM] > 0.0){
+                linear_gain /= 2;
+                angular_gain /= 2;
+            }
+            if(joy->axes[this->FAST_TRIGGER_NUM] > 0.0){
+                linear_gain *= 2;
+                angular_gain *= 2;
+            }
             Twist robot_vel_msg;
-            robot_vel_msg.linear.x  = gain * joy->axes[static_cast<int>(LOGICOOL_ANALOG::JOY_LEFT_Y)];
-            robot_vel_msg.linear.y  = gain * joy->axes[static_cast<int>(LOGICOOL_ANALOG::JOY_LEFT_X)];
-            robot_vel_msg.angular.z = gain * joy->axes[static_cast<int>(LOGICOOL_ANALOG::JOY_RIGHT_X)];
+            robot_vel_msg.linear.x  = linear_gain * joy->axes[this->LINEAR_X_JOY_NUM];
+            robot_vel_msg.linear.y  = linear_gain * joy->axes[this->LINEAR_Y_JOY_NUM];
+            robot_vel_msg.angular.z = angular_gain * joy->axes[this->ANGULAR_Z_JOY_NUM];
             robot_vel_publisher->publish(robot_vel_msg);
         }
     }

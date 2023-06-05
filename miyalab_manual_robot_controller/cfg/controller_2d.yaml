@@ -1,13 +1,16 @@
 controller_2d:
+  rate: 30
   trigger:
-    active  : 9       # JOY_LEFT_BUTTON
-    inactive: 10      # JOY_RIGHT_BUTTON
+    active_num  : 9   # JOY_LEFT_BUTTON
+    inactive_num: 10  # JOY_RIGHT_BUTTON
+    slow_num    : 5   # JOY_RIGHT_TRIGGER
+    fast_num    : 2   # JOY_LEFT_TRIGGER
   linear:
     gain: 1.0
-    x_stick_num: 1    # JOY_LEFT_Y
-    y_stick_num: 0    # JOY_LEFT_X
+    x_num: 1    # JOY_LEFT_Y
+    y_num: 0    # JOY_LEFT_X
   angular:
     gain: 1.0
-    z_stick_num: 3    # JOY_RIGHT_X
+    z_num: 3    # JOY_RIGHT_X
     
   

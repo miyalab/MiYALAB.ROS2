@@ -23,12 +23,18 @@ def generate_launch_description():
             ComposableNode(
                 package='miyalab_manual_robot_controller',
                 plugin='MiYALAB::ROS2::ManualRobotController2D',
-                name='joystick',
+                name='robot_run',
                 parameters=[join(pkg_prefix, "cfg/controller_2d.yaml")],
                 remappings=[
                     # publisher
-                    ("~/state",        "~/state"),
-                    ("~/is_connected", "~/is_connected")
+                    ("~/cmd_vel",   "~/cmd_vel"),
+                    ("~/is_active", "~/is_active"),
+
+                    # subscriber
+                    ("/joy/state", "/joystick/state"),
+
+                    # service
+                    ("~/set_active", "~/set_active")
                 ],
                 extra_arguments=[{'use_intra_process_comms': True}]
             )
