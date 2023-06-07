@@ -20,6 +20,11 @@
 using sensor_msgs::msg::LaserScan;
 
 //-----------------------------
+// const value
+//-----------------------------
+constexpr double TO_DEG = 180 / M_PI;
+
+//-----------------------------
 // Methods
 //-----------------------------
 /**
@@ -81,6 +86,7 @@ LaserScanViewer::~LaserScanViewer()
 
 void LaserScanViewer::onLaserScanSubscribed(const LaserScan::SharedPtr msg)
 {
+    // RCLCPP_INFO(this->get_logger(), "subscribed");
     this->laser_mutex.lock();
     this->laser = msg;
     this->laser_mutex.unlock();
@@ -105,15 +111,17 @@ void LaserScanViewer::run()
         RCLCPP_INFO(this->get_logger(), "---");
         RCLCPP_INFO(this->get_logger(), "stamp: %d.%09d", laser_cp->header.stamp.sec, laser_cp->header.stamp.nanosec);
         RCLCPP_INFO(this->get_logger(), "range_range: %.3f - %.3f", laser_cp->range_min, laser_cp->range_max);
-        RCLCPP_INFO(this->get_logger(), "angle_range: %.3f - %.3f", laser_cp->angle_min, laser_cp->angle_max);
+        RCLCPP_INFO(this->get_logger(), "angle_range: %.3f - %.3f", laser_cp->angle_min * TO_DEG, laser_cp->angle_max * TO_DEG);
+        RCLCPP_INFO(this->get_logger(), "angle++: %f", laser_cp->angle_increment * TO_DEG);
+        RCLCPP_INFO(this->get_logger(), "time++ : %f", laser_cp->time_increment);
         RCLCPP_INFO(this->get_logger(), "ranges_size: %ld", laser_cp->ranges.size());
 
         for(int i=0, size=laser_cp->ranges.size(); i<size; i++){
-            double x = frame.cols/2 - laser_cp->ranges[i] * std::cos(laser_cp->angle_increment * i + laser_cp->angle_min) / this->RESOLUTION;
-            double y = frame.rows/2 - laser_cp->ranges[i] * std::sin(laser_cp->angle_increment * i + laser_cp->angle_min) / this->RESOLUTION;
+            int x = frame.cols/2 - laser_cp->ranges[i] * std::sin(laser_cp->angle_increment * i + laser_cp->angle_min) / this->RESOLUTION;
+            int y = frame.rows/2 - laser_cp->ranges[i] * std::cos(laser_cp->angle_increment * i + laser_cp->angle_min) / this->RESOLUTION;
 
-            if(x<0 || frame.cols<x) continue;
-            if(y<0 || frame.rows<y) continue;
+            if(x<0 || frame.cols<=x) continue;
+            if(y<0 || frame.rows<=y) continue;
 
             frame.at<cv::Vec3b>(y,x) = cv::Vec3b(255,255,255);
         }

@@ -1,5 +1,5 @@
 laser_scan_viewer:
-  resolution: 0.05
+  resolution: 0.005
   range:
-    x: 10.0
-    y: 10.0
+    x: 1.0
+    y: 1.0
