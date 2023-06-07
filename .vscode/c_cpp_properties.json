@@ -8,9 +8,10 @@
       "includePath": [
         "${workspaceFolder}/**",
         "${workspaceFolder}/miyalab_joystick/include/**",
+        "${workspaceFolder}/miyalab_msg_viewer/include/**",
         "${workspaceFolder}/miyalab_manual_robot_controller/include/**",
         "/opt/ros/humble/include/**",
-        "/opt/ros/foxy/include/**",
+        // "/opt/ros/foxy/include/**",
         "/usr/include/**"
       ],
       "name": "ROS",

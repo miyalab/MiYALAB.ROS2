@@ -3,7 +3,7 @@
 <package format="3">
   <name>miyalab_msg_viewer</name>
   <version>1.0.0</version>
-  <description>TODO: Package description</description>
+  <description>This package is viewer for ROS2 Massage</description>
   <maintainer email="kmiyauchi@miya-lab.com">k.miyauchi</maintainer>
   <license>MIT</license>
 
