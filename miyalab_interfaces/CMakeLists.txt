@@ -24,6 +24,8 @@ find_package(sensor_msgs REQUIRED)
 find_package(nav_msgs REQUIRED)
 
 set(msg_files
+  msg/Polar.msg
+  msg/PointCloudPolar.msg
   msg/RobotState.msg
 )
 set(srv_files
