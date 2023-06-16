@@ -27,7 +27,7 @@ def generate_launch_description():
                 parameters=[join(pkg_prefix, "cfg/laser_scan.yaml")],
                 remappings=[
                     # subscriber
-                    ("/laser/scan", "/a2m8/scan"),
+                    ("/laser/scan", "/a3m1/scan"),
                 ],
                 extra_arguments=[{'use_intra_process_comms': True}]
             )

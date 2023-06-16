@@ -13,6 +13,9 @@
 #include <rclcpp/rclcpp.hpp>
 #include <sensor_msgs/msg/laser_scan.hpp>
 
+// OpenCV
+#include <opencv2/opencv.hpp>
+
 //-----------------------------
 // Namespace & using
 //-----------------------------
@@ -42,6 +45,8 @@ private:
     
     double RESOLUTION = -1;
     double RANGE_X = -1, RANGE_Y = -1;
+    cv::Vec3b BACKGROUND_COLOR = {0,0,0};
+    cv::Vec3b POINT_COLOR = {255,255,255};
     template<typename T, typename U>void forceSet(const T *value, const U &set){*((T*)value)=set;}
     std::unique_ptr<std::thread> thread;
     void run();

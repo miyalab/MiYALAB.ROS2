@@ -50,6 +50,12 @@ LaserScanViewer::LaserScanViewer(rclcpp::NodeOptions options) : rclcpp::Node("la
     this->forceSet(&this->RESOLUTION, this->declare_parameter("laser_scan_viewer.resolution", 0.5));
     this->forceSet(&this->RANGE_X, this->declare_parameter("laser_scan_viewer.range.x", 10.0));
     this->forceSet(&this->RANGE_Y, this->declare_parameter("laser_scan_viewer.range.y", 10.0));
+    this->forceSet(&this->BACKGROUND_COLOR[0], this->declare_parameter("laser_scan_viewer.background_color.b", 0));
+    this->forceSet(&this->BACKGROUND_COLOR[1], this->declare_parameter("laser_scan_viewer.background_color.g", 0));
+    this->forceSet(&this->BACKGROUND_COLOR[2], this->declare_parameter("laser_scan_viewer.background_color.r", 0));
+    this->forceSet(&this->POINT_COLOR[0], this->declare_parameter("laser_scan_viewer.point_color.b", 255));
+    this->forceSet(&this->POINT_COLOR[1], this->declare_parameter("laser_scan_viewer.point_color.g", 255));
+    this->forceSet(&this->POINT_COLOR[2], this->declare_parameter("laser_scan_viewer.point_color.r", 255));
     this->laser = std::make_shared<LaserScan>();
     RCLCPP_INFO(this->get_logger(), "Complete! Parameters were initialized.");
 
@@ -107,7 +113,7 @@ void LaserScanViewer::run()
         this->laser_mutex.unlock();
 
         cv::Size frame_size(2*(this->RANGE_X/this->RESOLUTION)+1, 2*(this->RANGE_Y/this->RESOLUTION)+1);
-        cv::Mat frame(frame_size, CV_8UC3, cv::Scalar(0,0,0));
+        cv::Mat frame(frame_size, CV_8UC3, this->BACKGROUND_COLOR);
         RCLCPP_INFO(this->get_logger(), "---");
         RCLCPP_INFO(this->get_logger(), "stamp: %d.%09d", laser_cp->header.stamp.sec, laser_cp->header.stamp.nanosec);
         RCLCPP_INFO(this->get_logger(), "range_range: %.3f - %.3f", laser_cp->range_min, laser_cp->range_max);
@@ -123,7 +129,7 @@ void LaserScanViewer::run()
             if(x<0 || frame.cols<=x) continue;
             if(y<0 || frame.rows<=y) continue;
 
-            frame.at<cv::Vec3b>(y,x) = cv::Vec3b(255,255,255);
+            frame.at<cv::Vec3b>(y,x) = this->POINT_COLOR;
         }
 
         cv::imshow("frame", frame);
