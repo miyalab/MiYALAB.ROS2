@@ -27,6 +27,8 @@ set(msg_files
   msg/Polar.msg
   msg/PointCloudPolar.msg
   msg/RobotState.msg
+  msg/Obstacle.msg
+  msg/ObstacleArray.msg
 )
 set(srv_files
   srv/SetInt32.srv

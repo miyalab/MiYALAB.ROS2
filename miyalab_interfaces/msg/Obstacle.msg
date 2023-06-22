@@ -1,2 +1,2 @@
 int32 index
-geometry_msgs/polygon obstacle
+geometry_msgs/Polygon obstacle

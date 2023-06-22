@@ -1,1 +1,1 @@
-ros2_rs_miyauchi_interfaces/obstacle[] data
+miyalab_interfaces/Obstacle[] data

@@ -13,6 +13,8 @@
 #include <rclcpp/rclcpp.hpp>
 #include <sensor_msgs/msg/point_cloud.hpp>
 
+#include <miyalab_interfaces/msg/ObstacleArray.msg>
+
 // OpenCV
 #include <opencv2/opencv.hpp>
 
