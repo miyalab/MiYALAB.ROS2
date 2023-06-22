@@ -28,7 +28,7 @@ include_directories(
   include
 )
 add_library(${PROJECT_NAME} SHARED
-  src/simple_detector_using_lidar
+  src/simple_detector_using_point_cloud
 )
 
 ament_target_dependencies(${PROJECT_NAME} 
@@ -39,7 +39,7 @@ ament_target_dependencies(${PROJECT_NAME}
   sensor_msgs
   OpenCV
 )
-rclcpp_components_register_nodes(${PROJECT_NAME} "MiYALAB::ROS2::SimpleDetectorUsingLidar")
+rclcpp_components_register_nodes(${PROJECT_NAME} "MiYALAB::ROS2::SimpleDetectorUsingPointCloud")
 
 install(TARGETS ${PROJECT_NAME} DESTINATION lib)
 
