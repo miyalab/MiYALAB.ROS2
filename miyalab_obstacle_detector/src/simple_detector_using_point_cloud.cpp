@@ -120,7 +120,7 @@ void SimpleObstacleDetectorUsingPointCloud::onDetectorRangeSubscribed(const Vect
  */
 void SimpleObstacleDetectorUsingPointCloud::run()
 {
-    RCLCPP_INFO(this->get_logger(), "%s has started. thread id = %0x", this->get_name(), std::this_thread::get_id());
+    RCLCPP_INFO_STREAM(this->get_logger(), this->get_name() << " has started. thread id = " << std::this_thread::get_id());
 
     // Main loop
     for(rclcpp::WallRate loop(30); rclcpp::ok(); loop.sleep()){

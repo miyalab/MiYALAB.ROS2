@@ -1,0 +1,20 @@
+obstacle_detector:
+  unit: 0.01
+  view_range:
+    x: 5.0
+    y: 5.0
+  range_min:
+    x: 0.0
+    y: 0.0
+    z: 0.1
+  range_max:
+    x: 2.5
+    y: 1.5
+    z: 1.5
+  line_length   : 90
+  line_thickness: 60
+  line_threshold: 50
+  delate_times  : 5
+  erode_times   : 3
+  dilate_square : 15
+  erode_square  : 15
