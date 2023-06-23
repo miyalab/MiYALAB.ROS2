@@ -8,8 +8,17 @@ from launch_ros.actions import Node
 
 def generate_launch_description():
     pkg_prefix = get_package_share_directory('miyalab_obstacle_detector')
+    
+    container = Node(
+	    package='rclcpp_components',
+		executable='component_container',
+		name = 'obstacle_container',
+		emulate_tty = True,
+		output = 'screen'
+	)
+
     components = LoadComposableNodes(
-        target_container="rs_container",
+        target_container="obstacle_container",
         composable_node_descriptions=[
             ComposableNode(
                 package='miyalab_obstacle_detector',
@@ -18,7 +27,7 @@ def generate_launch_description():
                 parameters=[join(pkg_prefix, "cfg/simple_detector_using_point_cloud.yaml")],
                 remappings=[
                     # subscriber
-                    ("/lidar/points",                    "/rfans16/points_near"),
+                    ("/lidar/points", "/rfans16/points_near"),
 
                     # publisher
                     ("~/obstacles", "~/obstacle_infos"),
@@ -29,5 +38,6 @@ def generate_launch_description():
         ]
     )
     return LaunchDescription([
+        container,
         components
     ])
