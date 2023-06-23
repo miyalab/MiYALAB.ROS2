@@ -166,6 +166,30 @@ void SimpleObstacleDetectorUsingPointCloud::run()
             for(int i=0, size=obstacles_msg->data.size(); i<size; i++){
                 const cv::Point point(center.x - obstacles_msg->data[i].centroid.y/this->unit, center.y - obstacles_msg->data[i].centroid.x/this->unit);
                 cv::circle(debug_img.image, point, 3, cv::Scalar(0,0,255), -1);
+                for(int j=1, size=obstacles_msg->data[i].shape.points.size(); j<size; j++){
+                    cv::line(debug_img.image, 
+                        cv::Point(
+                            center.x - obstacles_msg->data[i].shape.points[j-1].y/this->unit,
+                            center.y - obstacles_msg->data[i].shape.points[j-1].x/this->unit
+                        ),
+                        cv::Point(
+                            center.x - obstacles_msg->data[i].shape.points[j].y/this->unit,
+                            center.y - obstacles_msg->data[i].shape.points[j].x/this->unit
+                        ),
+                        cv::Scalar(0,0,255)
+                    );
+                }
+                cv::line(debug_img.image, 
+                    cv::Point(
+                        center.x - obstacles_msg->data[i].shape.points[0].y/this->unit,
+                        center.y - obstacles_msg->data[i].shape.points[0].x/this->unit
+                    ),
+                    cv::Point(
+                        center.x - obstacles_msg->data[i].shape.points.back().y/this->unit,
+                        center.y - obstacles_msg->data[i].shape.points.back().x/this->unit
+                    ),
+                    cv::Scalar(0,0,255)
+                );
                 
             }
             char text[256];

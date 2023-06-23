@@ -74,12 +74,12 @@ void SimpleObstacleDetector::detect(const PointCloud &points, ObstacleArray *obs
         obs.shape.points.resize(4);
         obs.shape.points[0].x = x;
         obs.shape.points[0].y = y;
-        obs.shape.points[1].x = x + width;
+        obs.shape.points[1].x = x - height;
         obs.shape.points[1].y = y;
-        obs.shape.points[2].x = x + width;
-        obs.shape.points[2].y = y + height;
+        obs.shape.points[2].x = x - height;
+        obs.shape.points[2].y = y - width;
         obs.shape.points[3].x = x;
-        obs.shape.points[3].y = y + height;
+        obs.shape.points[3].y = y - width;
 
         cv::circle(*dst, cv::Point(binary_img.cols/2 - obs.centroid.y/m_unit, binary_img.rows/2 - obs.centroid.x/m_unit), 3, cv::Scalar(0,0,255), -1);
 
