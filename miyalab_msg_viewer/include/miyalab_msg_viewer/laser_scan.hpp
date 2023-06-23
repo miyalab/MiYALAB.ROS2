@@ -1,5 +1,5 @@
-#ifndef __MIYALAB_ROS2_DRIVER_MSG_VIEWER_HPP__
-#define __MIYALAB_ROS2_DRIVER_MSG_VIEWER_HPP__
+#ifndef __MIYALAB_ROS2_DRIVER_MSG_VIEWER_LASER_SCAN_VIEWER_HPP__
+#define __MIYALAB_ROS2_DRIVER_MSG_VIEWER_LASER_SCAN_VIEWER_HPP__
 
 //-----------------------------
 // include
@@ -54,7 +54,7 @@ private:
 }
 }
 
-#endif // __MIYALAB_ROS2_DRIVER_MSG_VIEWER_HPP__
+#endif // __MIYALAB_ROS2_DRIVER_MSG_VIEWER_LASER_SCAN_VIEWER_HPP__
 
 //-----------------------------------------------------------------------------------
 // end of file

@@ -28,6 +28,7 @@ include_directories(
 )
 add_library(${PROJECT_NAME} SHARED
   src/laser_scan.cpp
+  src/image.cpp
 )
 
 ament_target_dependencies(${PROJECT_NAME} 
