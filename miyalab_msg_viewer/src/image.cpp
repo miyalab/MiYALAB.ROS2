@@ -8,6 +8,7 @@
 
 // ROS2
 #include <rclcpp/rclcpp.hpp>
+#include <cv_bridge/cv_bridge.h>
 
 // OpenCV
 #include <opencv2/opencv.hpp>
@@ -98,14 +99,17 @@ void ImageViewer::run()
     
     // Main loop
     for(rclcpp::WallRate loop(10); rclcpp::ok(); loop.sleep()){
-        this->laser_mutex.lock();
+        this->image_mutex.lock();
         auto image_ptr = this->image;
-        this->laser_mutex.unlock();
+        this->image = nullptr;
+        this->image_mutex.unlock();
+        if(!image_ptr.get()) continue;
+        if(image_ptr->data.empty()) continue;
 
         RCLCPP_INFO(this->get_logger(), "---");
         RCLCPP_INFO(this->get_logger(), "stamp: %d.%09d", image_ptr->header.stamp.sec, image_ptr->header.stamp.nanosec);
-
-        cv::imshow("frame", frame);
+        RCLCPP_INFO(this->get_logger(), "encoding: %s", image_ptr->encoding.c_str());
+        cv::imshow("frame", cv_bridge::toCvShare(image_ptr, image_ptr->encoding)->image);
         cv::waitKey(1);
     }
 
