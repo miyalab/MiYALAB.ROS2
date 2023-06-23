@@ -10,6 +10,8 @@
         "${workspaceFolder}/miyalab_joystick/include/**",
         "${workspaceFolder}/miyalab_msg_viewer/include/**",
         "${workspaceFolder}/miyalab_manual_robot_controller/include/**",
+        "${workspaceFolder}/miyalab_obstacle_detector/include/**",
+        "~/workspace/ros2_ws/install/miyalab_interfaces/include/**",
         "/opt/ros/humble/include/**",
         // "/opt/ros/foxy/include/**",
         "/usr/include/**"

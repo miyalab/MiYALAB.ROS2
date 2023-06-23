@@ -26,9 +26,11 @@ find_package(OpenCV REQUIRED core highgui videoio)
 
 include_directories(
   include
+  lib
 )
 add_library(${PROJECT_NAME} SHARED
-  src/simple_detector_using_point_cloud
+  src/simple_detector_using_point_cloud.cpp
+  lib/ObstacleDetector/SimpleObstacleDetector.cpp
 )
 
 ament_target_dependencies(${PROJECT_NAME} 

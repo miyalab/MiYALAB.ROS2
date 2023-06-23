@@ -76,7 +76,8 @@
         "typeindex": "cpp",
         "typeinfo": "cpp",
         "variant": "cpp",
-        "*.ipp": "cpp"
+        "*.ipp": "cpp",
+        "*.msg": "cpp"
     },
     "python.autoComplete.extraPaths": [
         "/home/kmiyauchi/ros2_ws/install/miyalab_interfaces/local/lib/python3.10/dist-packages",

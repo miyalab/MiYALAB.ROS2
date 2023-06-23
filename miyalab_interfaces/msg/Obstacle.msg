@@ -1,2 +1,3 @@
 int32 index
-geometry_msgs/Polygon obstacle
+geometry_msgs/Point centroid
+geometry_msgs/Polygon shape
