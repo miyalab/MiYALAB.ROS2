@@ -22,6 +22,7 @@ find_package(rclcpp_components REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(OpenCV REQUIRED core highgui videoio)
+find_package(cv_bridge REQUIRED)
 
 include_directories(
   include
@@ -37,8 +38,10 @@ ament_target_dependencies(${PROJECT_NAME}
   std_msgs
   sensor_msgs
   OpenCV
+  cv_bridge
 )
 rclcpp_components_register_nodes(${PROJECT_NAME} "MiYALAB::ROS2::LaserScanViewer")
+rclcpp_components_register_nodes(${PROJECT_NAME} "MiYALAB::ROS2::ImageViewer")
 
 install(TARGETS ${PROJECT_NAME} DESTINATION lib)
 

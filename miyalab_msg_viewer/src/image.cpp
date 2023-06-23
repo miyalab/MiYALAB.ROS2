@@ -37,7 +37,7 @@ namespace ROS2{
  * 
  * @param options 
  */
-LaserScanViewer::LaserScanViewer(rclcpp::NodeOptions options) : rclcpp::Node("laser_scan_viewer", options)
+ImageViewer::ImageViewer(rclcpp::NodeOptions options) : rclcpp::Node("laser_scan_viewer", options)
 {
     // Using placeholders
     using std::placeholders::_1;
@@ -51,7 +51,7 @@ LaserScanViewer::LaserScanViewer(rclcpp::NodeOptions options) : rclcpp::Node("la
 
     // Initialize subscriber
     RCLCPP_INFO(this->get_logger(), "Initialize subscribers...");
-    this->laser_subscriber = this->create_subscription<LaserScan>("/camera/image", 10, std::bind(&LaserScanViewer::onLaserScanSubscribed, this, _1));
+    this->laser_subscriber = this->create_subscription<Image>("/camera/image", 10, std::bind(&ImageViewer::onImageSubscribed, this, _1));
     RCLCPP_INFO(this->get_logger(), "Complete! Subscribers were initialized.");
 
     // Initialize publisher
@@ -67,7 +67,7 @@ LaserScanViewer::LaserScanViewer(rclcpp::NodeOptions options) : rclcpp::Node("la
     // RCLCPP_INFO(this->get_logger(), "Complete! Service-clients were initialized.");
 
     // Main loop processing
-    this->thread = std::make_unique<std::thread>(&LaserScanViewer::run, this);
+    this->thread = std::make_unique<std::thread>(&ImageViewer::run, this);
     this->thread->detach();
 }
 
@@ -75,24 +75,24 @@ LaserScanViewer::LaserScanViewer(rclcpp::NodeOptions options) : rclcpp::Node("la
  * @brief Destroy the class object
  * 
  */
-LaserScanViewer::~LaserScanViewer()
+ImageViewer::~ImageViewer()
 {
     this->thread.release();
 }
 
-void LaserScanViewer::onLaserScanSubscribed(const Image::SharedPtr msg)
+void ImageViewer::onImageSubscribed(const Image::SharedPtr msg)
 {
     // RCLCPP_INFO(this->get_logger(), "subscribed");
-    this->laser_mutex.lock();
-    this->laser = msg;
-    this->laser_mutex.unlock();
+    this->image_mutex.lock();
+    this->image = msg;
+    this->image_mutex.unlock();
 }
 
 /**
  * @brief Execute method
  * 
  */
-void LaserScanViewer::run()
+void ImageViewer::run()
 {
     RCLCPP_INFO_STREAM(this->get_logger(), this->get_name() << " has started. thread id = " << std::this_thread::get_id());
     
@@ -115,7 +115,7 @@ void LaserScanViewer::run()
 }
 
 #include <rclcpp_components/register_node_macro.hpp>
-RCLCPP_COMPONENTS_REGISTER_NODE(MiYALAB::ROS2::LaserScanViewer)
+RCLCPP_COMPONENTS_REGISTER_NODE(MiYALAB::ROS2::ImageViewer)
 
 //-----------------------------------------------------------------------------------
 // end of file
