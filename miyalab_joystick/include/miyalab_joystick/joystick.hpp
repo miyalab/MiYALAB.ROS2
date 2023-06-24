@@ -38,7 +38,6 @@ public:
 private:
     // joystick関連
     int handler = -1;
-    std::string device_name;
     rclcpp::Publisher<sensor_msgs::msg::Joy>::SharedPtr state_publisher;
     rclcpp::Publisher<std_msgs::msg::Bool>::SharedPtr is_connected_publisher;
 

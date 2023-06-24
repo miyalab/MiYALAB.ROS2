@@ -49,23 +49,11 @@ Joystick::Joystick(rclcpp::NodeOptions options) : rclcpp::Node("joystick", optio
     this->forceSet(&this->DEAD_ZONE  , this->declare_parameter("joystick.dead_zone", 0.05));
     RCLCPP_INFO(this->get_logger(), "Complete! Parameters were initialized.");
 
-    // Initialize subscriber
-    // RCLCPP_INFO(this->get_logger(), "Initialize subscribers...");
-    // RCLCPP_INFO(this->get_logger(), "Complete! Subscribers were initialized.");
-
     // Initialize publisher
     RCLCPP_INFO(this->get_logger(), "Initialize publishers...");
     this->state_publisher = this->create_publisher<sensor_msgs::msg::Joy>("~/state", 10);
     this->is_connected_publisher = this->create_publisher<std_msgs::msg::Bool>("~/is_connected", 10);
     RCLCPP_INFO(this->get_logger(), "Complete! Publishers were initialized.");
-
-    // Initialize Service-Server
-    // RCLCPP_INFO(this->get_logger(), "Initialize service-servers...");
-    // RCLCPP_INFO(this->get_logger(), "Complete! Service-servers were initialized.");
-
-    // Initialize Service-Client 
-    // RCLCPP_INFO(this->get_logger(), "Initialize service-clients...");
-    // RCLCPP_INFO(this->get_logger(), "Complete! Service-clients were initialized.");
 
     // Main loop processing
     this->thread = std::make_unique<std::thread>(&Joystick::run, this);
@@ -92,13 +80,14 @@ void Joystick::run()
     // Main loop
     std::vector<float> axes;
     std::vector<int> buttons;
+    std::string device_name;
     for(rclcpp::WallRate loop(this->RATE); rclcpp::ok(); loop.sleep()){
         std_msgs::msg::Bool is_connected_msg;
         is_connected_msg.data = std::filesystem::exists(this->DEVICE_PATH);
         
         // publishデータ
         sensor_msgs::msg::Joy::UniquePtr state_msg = std::make_unique<sensor_msgs::msg::Joy>();
-        state_msg->header.frame_id = this->device_name;
+        state_msg->header.frame_id = device_name;
         state_msg->header.stamp    = this->now();
 
         // connect
@@ -109,7 +98,9 @@ void Joystick::run()
                 switch(js.type & ~JS_EVENT_INIT){
                 case JS_EVENT_AXIS:
                     axes[js.number] = (float)js.value / 32767;
-                    axes[js.number] *= (axes[js.number] <= -this->DEAD_ZONE || this->DEAD_ZONE <= axes[js.number]);
+                    if (axes[js.number] < -this->DEAD_ZONE)     axes[js.number] = (axes[js.number] + this->DEAD_ZONE) / (1.0 - this->DEAD_ZONE);
+                    else if(axes[js.number] >  this->DEAD_ZONE) axes[js.number] = (axes[js.number] - this->DEAD_ZONE) / (1.0 - this->DEAD_ZONE);
+                    else axes[js.number] = 0;
                     break;
                 case JS_EVENT_BUTTON:
                     buttons[js.number] = js.value;
@@ -124,7 +115,7 @@ void Joystick::run()
             //RCLCPP_INFO(this->get_logger(), "disconnected");
             close(this->handler);
             this->handler = -1;
-            this->device_name = "";
+            device_name = "";
         }
         // disconnect -> connect
         else if(is_connected_msg.data && this->handler < 0){
@@ -139,15 +130,15 @@ void Joystick::run()
                 ioctl(this->handler, JSIOCGNAME(32), &buf);
                 axes.resize(axis_size);
                 buttons.resize(button_size);
-                this->device_name = buf;
+                device_name = buf;
                 fcntl(this->handler, F_SETFL, O_NONBLOCK);
             }
             else RCLCPP_ERROR(this->get_logger(), "%s connect error!", DEVICE_PATH.c_str());
         }
 
         // publish
-        state_publisher->publish(std::move(state_msg));
-        is_connected_publisher->publish(is_connected_msg);
+        this->state_publisher->publish(std::move(state_msg));
+        this->is_connected_publisher->publish(is_connected_msg);
     }
 
     RCLCPP_INFO(this->get_logger(), "%s has stoped.", this->get_name());
