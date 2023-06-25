@@ -31,6 +31,7 @@ add_library(${PROJECT_NAME} SHARED
   src/laser_scan.cpp
   src/image.cpp
   src/point_cloud.cpp
+  src/point_cloud2.cpp
 )
 
 ament_target_dependencies(${PROJECT_NAME} 
@@ -44,6 +45,7 @@ ament_target_dependencies(${PROJECT_NAME}
 rclcpp_components_register_nodes(${PROJECT_NAME} "MiYALAB::ROS2::LaserScanViewer")
 rclcpp_components_register_nodes(${PROJECT_NAME} "MiYALAB::ROS2::ImageViewer")
 rclcpp_components_register_nodes(${PROJECT_NAME} "MiYALAB::ROS2::PointCloudViewer")
+rclcpp_components_register_nodes(${PROJECT_NAME} "MiYALAB::ROS2::PointCloud2Viewer")
 
 install(TARGETS ${PROJECT_NAME} DESTINATION lib)
 
