@@ -22,12 +22,12 @@ def generate_launch_description():
         composable_node_descriptions=[
             ComposableNode(
                 package='miyalab_msg_viewer',
-                plugin='MiYALAB::ROS2::LaserScanViewer',
+                plugin='MiYALAB::ROS2::PointCloudViewer',
                 name='viewer',
-                parameters=[join(pkg_prefix, "cfg/laser_scan.yaml")],
+                parameters=[join(pkg_prefix, "cfg/point_cloud.yaml")],
                 remappings=[
                     # subscriber
-                    ("/laser/scan", "/a3m1/scan"),
+                    ("/lidar/points", "/rfans16/points_near"),
                 ],
                 extra_arguments=[{'use_intra_process_comms': True}]
             )
