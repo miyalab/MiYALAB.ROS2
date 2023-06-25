@@ -127,9 +127,12 @@ void PointCloud2Viewer::run()
         cv::Mat frame(frame_size, CV_8UC3, this->BACKGROUND_COLOR);
         RCLCPP_INFO(this->get_logger(), "---");
         RCLCPP_INFO(this->get_logger(), "stamp: %d.%09d", points_ptr->header.stamp.sec, points_ptr->header.stamp.nanosec);
+        RCLCPP_INFO(this->get_logger(), "bigendian: %s", points->is_bigendian ? "YES" : "NO");
         for(int i=0, size=points_ptr->fields.size(); i<size; i++){
             RCLCPP_INFO(this->get_logger(), "field[%d]: %s", i, points_ptr->fields[i].name.c_str());
             RCLCPP_INFO(this->get_logger(), "datatype: %s", DATATYPE_STR[points_ptr->fields[i].datatype]);
+            RCLCPP_INFO(this->get_logger(), "offset  : %d", points->fields[i].offset);
+            RCLCPP_INFO(this->get_logger(), "count   : %d", points->fields[i].count);
         }
 
         // for(int i=0, size=points_ptr->points.size(); i<size; i++){
