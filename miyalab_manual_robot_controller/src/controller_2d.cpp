@@ -120,19 +120,19 @@ void ManualRobotController2D::run()
     for(rclcpp::WallRate loop(this->LOOP_RATE); rclcpp::ok(); loop.sleep()){
         // joystick入力状態 ラッチ
         this->joy_state_mutex.lock();
-        const auto joy = this->joy_state;
+        const auto joy_ptr = this->joy_state;
         this->joy_state = nullptr;
         this->joy_state_mutex.unlock();
-        if(!joy.get()) continue;
-        if(joy->buttons.empty()) continue;
 
         // active状態
         this->is_active_mutex.lock();
         is_active_msg.data = this->is_active;
 
         // キー入力によるアクティブ状態変更
-        is_active_msg.data = is_active_msg.data ||  joy->buttons[this->ACTIVE_BUTTON_NUM];
-        is_active_msg.data = is_active_msg.data && !joy->buttons[this->INACTIVE_BUTTON_NUM];
+        if(joy_ptr.get() && !joy_ptr->buttons.empty()){
+            is_active_msg.data = is_active_msg.data ||  joy_ptr->buttons[this->ACTIVE_BUTTON_NUM];
+            is_active_msg.data = is_active_msg.data && !joy_ptr->buttons[this->INACTIVE_BUTTON_NUM];
+        }
         is_active_publisher->publish(is_active_msg);
         this->is_active = is_active_msg.data;
         this->is_active_mutex.unlock();
@@ -142,18 +142,18 @@ void ManualRobotController2D::run()
             // 直進方向速度ゲイン
             double linear_gain = this->LINEAR_GAIN;
             double angular_gain = this->ANGULAR_GAIN;
-            if(joy->axes[this->SLOW_TRIGGER_NUM] > 0.0){
+            if(joy_ptr->axes[this->SLOW_TRIGGER_NUM] > 0.0){
                 linear_gain /= 2;
                 angular_gain /= 2;
             }
-            if(joy->axes[this->FAST_TRIGGER_NUM] > 0.0){
+            if(joy_ptr->axes[this->FAST_TRIGGER_NUM] > 0.0){
                 linear_gain *= 2;
                 angular_gain *= 2;
             }
             Twist robot_vel_msg;
-            robot_vel_msg.linear.x  = linear_gain * joy->axes[this->LINEAR_X_JOY_NUM];
-            robot_vel_msg.linear.y  = linear_gain * joy->axes[this->LINEAR_Y_JOY_NUM];
-            robot_vel_msg.angular.z = angular_gain * joy->axes[this->ANGULAR_Z_JOY_NUM];
+            robot_vel_msg.linear.x  = linear_gain * joy_ptr->axes[this->LINEAR_X_JOY_NUM];
+            robot_vel_msg.linear.y  = linear_gain * joy_ptr->axes[this->LINEAR_Y_JOY_NUM];
+            robot_vel_msg.angular.z = angular_gain * joy_ptr->axes[this->ANGULAR_Z_JOY_NUM];
             robot_vel_publisher->publish(robot_vel_msg);
         }
     }
