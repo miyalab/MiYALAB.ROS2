@@ -20,6 +20,8 @@ find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(rclcpp_components REQUIRED)
 find_package(std_msgs REQUIRED)
+find_package(geometry_msgs REQUIRED)
+find_package(nav_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(OpenCV REQUIRED core highgui videoio)
 find_package(cv_bridge REQUIRED)
@@ -32,6 +34,7 @@ add_library(${PROJECT_NAME} SHARED
   src/image.cpp
   src/point_cloud.cpp
   src/point_cloud2.cpp
+  src/odometry.cpp
 )
 
 ament_target_dependencies(${PROJECT_NAME} 
@@ -39,9 +42,12 @@ ament_target_dependencies(${PROJECT_NAME}
   rclcpp_components
   std_msgs
   sensor_msgs
+  geometry_msgs
+  nav_msgs
   OpenCV
   cv_bridge
 )
+rclcpp_components_register_nodes(${PROJECT_NAME} "MiYALAB::ROS2::OdometryViewer")
 rclcpp_components_register_nodes(${PROJECT_NAME} "MiYALAB::ROS2::LaserScanViewer")
 rclcpp_components_register_nodes(${PROJECT_NAME} "MiYALAB::ROS2::ImageViewer")
 rclcpp_components_register_nodes(${PROJECT_NAME} "MiYALAB::ROS2::PointCloudViewer")
