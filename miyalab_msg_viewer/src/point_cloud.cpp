@@ -42,43 +42,28 @@ PointCloudViewer::PointCloudViewer(rclcpp::NodeOptions options) : rclcpp::Node("
 {
     // Using placeholders
     using std::placeholders::_1;
-    using std::placeholders::_2;
-    using std::placeholders::_3;
 
     // Initialize parameters
     RCLCPP_INFO(this->get_logger(), "Initialize parameters...");
-    this->forceSet(&this->RESOLUTION, this->declare_parameter("point_cloud_viewer.resolution", 0.5));
-    this->forceSet(&this->RANGE_X, this->declare_parameter("point_cloud_viewer.range.x", 10.0));
-    this->forceSet(&this->RANGE_Y, this->declare_parameter("point_cloud_viewer.range.y", 10.0));
-    this->forceSet(&this->BACKGROUND_COLOR[0], this->declare_parameter("point_cloud_viewer.background_color.b", 0));
-    this->forceSet(&this->BACKGROUND_COLOR[1], this->declare_parameter("point_cloud_viewer.background_color.g", 0));
-    this->forceSet(&this->BACKGROUND_COLOR[2], this->declare_parameter("point_cloud_viewer.background_color.r", 0));
-    this->forceSet(&this->POINT_COLOR[0], this->declare_parameter("point_cloud_viewer.point_color.b", 255));
-    this->forceSet(&this->POINT_COLOR[1], this->declare_parameter("point_cloud_viewer.point_color.g", 255));
-    this->forceSet(&this->POINT_COLOR[2], this->declare_parameter("point_cloud_viewer.point_color.r", 255));
-    this->points = std::make_shared<PointCloud>();
+    m_resolution = this->declare_parameter("point_cloud_viewer.resolution", 0.5);
+    m_range_x    = this->declare_parameter("point_cloud_viewer.range.x", 10.0);
+    m_range_y    = this->declare_parameter("point_cloud_viewer.range.y", 10.0);
+    m_background_color[0] = this->declare_parameter("point_cloud_viewer.background_color.b", 0);
+    m_background_color[1] = this->declare_parameter("point_cloud_viewer.background_color.g", 0);
+    m_background_color[2] = this->declare_parameter("point_cloud_viewer.background_color.r", 0);
+    m_point_color[0] = this->declare_parameter("point_cloud_viewer.point_color.b", 255);
+    m_point_color[1] = this->declare_parameter("point_cloud_viewer.point_color.g", 255);
+    m_point_color[2] = this->declare_parameter("point_cloud_viewer.point_color.r", 255);
     RCLCPP_INFO(this->get_logger(), "Complete! Parameters were initialized.");
 
     // Initialize subscriber
     RCLCPP_INFO(this->get_logger(), "Initialize subscribers...");
-    this->points_subscriber = this->create_subscription<PointCloud>("/lidar/points", 10, std::bind(&PointCloudViewer::onPointsSubscribed, this, _1));
+    m_subscriber = this->create_subscription<PointCloud>("/lidar/points", 10, std::bind(&PointCloudViewer::onMsgSubscribed, this, _1));
     RCLCPP_INFO(this->get_logger(), "Complete! Subscribers were initialized.");
 
-    // Initialize publisher
-    // RCLCPP_INFO(this->get_logger(), "Initialize publishers...");
-    // RCLCPP_INFO(this->get_logger(), "Complete! Publishers were initialized.");
-
-    // Initialize Service-Server
-    // RCLCPP_INFO(this->get_logger(), "Initialize service-servers...");
-    // RCLCPP_INFO(this->get_logger(), "Complete! Service-servers were initialized.");
-
-    // Initialize Service-Client 
-    // RCLCPP_INFO(this->get_logger(), "Initialize service-clients...");
-    // RCLCPP_INFO(this->get_logger(), "Complete! Service-clients were initialized.");
-
     // Main loop processing
-    this->thread = std::make_unique<std::thread>(&PointCloudViewer::run, this);
-    this->thread->detach();
+    m_thread = std::make_unique<std::thread>(&PointCloudViewer::run, this);
+    m_thread->detach();
 }
 
 /**
@@ -87,15 +72,15 @@ PointCloudViewer::PointCloudViewer(rclcpp::NodeOptions options) : rclcpp::Node("
  */
 PointCloudViewer::~PointCloudViewer()
 {
-    this->thread.release();
+    m_thread.release();
 }
 
-void PointCloudViewer::onPointsSubscribed(const PointCloud::SharedPtr msg)
+void PointCloudViewer::onMsgSubscribed(const PointCloud::SharedPtr msg)
 {
     // RCLCPP_INFO(this->get_logger(), "subscribed");
-    this->points_mutex.lock();
-    this->points = msg;
-    this->points_mutex.unlock();
+    m_mutex.lock();
+    m_msg_ptr = msg;
+    m_mutex.unlock();
 }
 
 /**
@@ -108,12 +93,14 @@ void PointCloudViewer::run()
     
     // Main loop
     for(rclcpp::WallRate loop(10); rclcpp::ok(); loop.sleep()){
-        this->points_mutex.lock();
-        auto points_ptr = this->points;
-        this->points_mutex.unlock();
+        m_mutex.lock();
+        auto points_ptr = m_msg_ptr;
+        m_msg_ptr = nullptr;
+        m_mutex.unlock();
+        if(!points_ptr.get()) continue;
 
-        cv::Size frame_size(2*(this->RANGE_X/this->RESOLUTION)+1, 2*(this->RANGE_Y/this->RESOLUTION)+1);
-        cv::Mat frame(frame_size, CV_8UC3, this->BACKGROUND_COLOR);
+        cv::Size frame_size(2*(m_range_x/m_resolution)+1, 2*(m_range_y/m_resolution)+1);
+        cv::Mat frame(frame_size, CV_8UC3, m_background_color);
         RCLCPP_INFO(this->get_logger(), "---");
         RCLCPP_INFO(this->get_logger(), "stamp: %d.%09d", points_ptr->header.stamp.sec, points_ptr->header.stamp.nanosec);
         for(int i=0, size=points_ptr->channels.size(); i<size; i++){
@@ -121,13 +108,13 @@ void PointCloudViewer::run()
         }
 
         for(int i=0, size=points_ptr->points.size(); i<size; i++){
-            int x = frame.cols/2 - points_ptr->points[i].y/this->RESOLUTION;
-            int y = frame.cols/2 - points_ptr->points[i].x/this->RESOLUTION;
+            int x = frame.cols/2 - points_ptr->points[i].y/m_resolution;
+            int y = frame.cols/2 - points_ptr->points[i].x/m_resolution;
 
             if(x<0 || frame.cols<=x) continue;
             if(y<0 || frame.rows<=y) continue;
 
-            frame.at<cv::Vec3b>(y,x) = this->POINT_COLOR;
+            frame.at<cv::Vec3b>(y,x) = m_point_color;
         }
 
         cv::imshow("frame", frame);

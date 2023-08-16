@@ -42,43 +42,28 @@ LaserScanViewer::LaserScanViewer(rclcpp::NodeOptions options) : rclcpp::Node("la
 {
     // Using placeholders
     using std::placeholders::_1;
-    using std::placeholders::_2;
-    using std::placeholders::_3;
 
     // Initialize parameters
     RCLCPP_INFO(this->get_logger(), "Initialize parameters...");
-    this->forceSet(&this->RESOLUTION, this->declare_parameter("laser_scan_viewer.resolution", 0.5));
-    this->forceSet(&this->RANGE_X, this->declare_parameter("laser_scan_viewer.range.x", 10.0));
-    this->forceSet(&this->RANGE_Y, this->declare_parameter("laser_scan_viewer.range.y", 10.0));
-    this->forceSet(&this->BACKGROUND_COLOR[0], this->declare_parameter("laser_scan_viewer.background_color.b", 0));
-    this->forceSet(&this->BACKGROUND_COLOR[1], this->declare_parameter("laser_scan_viewer.background_color.g", 0));
-    this->forceSet(&this->BACKGROUND_COLOR[2], this->declare_parameter("laser_scan_viewer.background_color.r", 0));
-    this->forceSet(&this->POINT_COLOR[0], this->declare_parameter("laser_scan_viewer.point_color.b", 255));
-    this->forceSet(&this->POINT_COLOR[1], this->declare_parameter("laser_scan_viewer.point_color.g", 255));
-    this->forceSet(&this->POINT_COLOR[2], this->declare_parameter("laser_scan_viewer.point_color.r", 255));
-    this->laser = std::make_shared<LaserScan>();
+    m_resolution = this->declare_parameter("laser_scan_viewer.resolution", 0.5);
+    m_range_x    = this->declare_parameter("laser_scan_viewer.range.x", 10.0);
+    m_range_y    = this->declare_parameter("laser_scan_viewer.range.y", 10.0);
+    m_background_color[0] = this->declare_parameter("laser_scan_viewer.background_color.b", 0);
+    m_background_color[1] = this->declare_parameter("laser_scan_viewer.background_color.g", 0);
+    m_background_color[2] = this->declare_parameter("laser_scan_viewer.background_color.r", 0);
+    m_point_color[0] = this->declare_parameter("laser_scan_viewer.point_color.b", 255);
+    m_point_color[1] = this->declare_parameter("laser_scan_viewer.point_color.g", 255);
+    m_point_color[2] = this->declare_parameter("laser_scan_viewer.point_color.r", 255);
     RCLCPP_INFO(this->get_logger(), "Complete! Parameters were initialized.");
 
     // Initialize subscriber
     RCLCPP_INFO(this->get_logger(), "Initialize subscribers...");
-    this->laser_subscriber = this->create_subscription<LaserScan>("/laser/scan", 10, std::bind(&LaserScanViewer::onLaserScanSubscribed, this, _1));
+    m_subscriber = this->create_subscription<LaserScan>("/laser/scan", 10, std::bind(&LaserScanViewer::onMsgSubscribed, this, _1));
     RCLCPP_INFO(this->get_logger(), "Complete! Subscribers were initialized.");
 
-    // Initialize publisher
-    // RCLCPP_INFO(this->get_logger(), "Initialize publishers...");
-    // RCLCPP_INFO(this->get_logger(), "Complete! Publishers were initialized.");
-
-    // Initialize Service-Server
-    // RCLCPP_INFO(this->get_logger(), "Initialize service-servers...");
-    // RCLCPP_INFO(this->get_logger(), "Complete! Service-servers were initialized.");
-
-    // Initialize Service-Client 
-    // RCLCPP_INFO(this->get_logger(), "Initialize service-clients...");
-    // RCLCPP_INFO(this->get_logger(), "Complete! Service-clients were initialized.");
-
     // Main loop processing
-    this->thread = std::make_unique<std::thread>(&LaserScanViewer::run, this);
-    this->thread->detach();
+    m_thread = std::make_unique<std::thread>(&LaserScanViewer::run, this);
+    m_thread->detach();
 }
 
 /**
@@ -87,15 +72,14 @@ LaserScanViewer::LaserScanViewer(rclcpp::NodeOptions options) : rclcpp::Node("la
  */
 LaserScanViewer::~LaserScanViewer()
 {
-    this->thread.release();
+    m_thread.release();
 }
 
-void LaserScanViewer::onLaserScanSubscribed(const LaserScan::SharedPtr msg)
+void LaserScanViewer::onMsgSubscribed(const LaserScan::SharedPtr msg)
 {
-    // RCLCPP_INFO(this->get_logger(), "subscribed");
-    this->laser_mutex.lock();
-    this->laser = msg;
-    this->laser_mutex.unlock();
+    m_mutex.lock();
+    m_msg_ptr = msg;
+    m_mutex.unlock();
 }
 
 /**
@@ -108,28 +92,30 @@ void LaserScanViewer::run()
     
     // Main loop
     for(rclcpp::WallRate loop(10); rclcpp::ok(); loop.sleep()){
-        this->laser_mutex.lock();
-        auto laser_cp = this->laser;
-        this->laser_mutex.unlock();
+        m_mutex.lock();
+        auto msg_ptr = m_msg_ptr;
+        m_msg_ptr = nullptr;
+        m_mutex.unlock();
+        if(!msg_ptr.get()) continue;
 
-        cv::Size frame_size(2*(this->RANGE_X/this->RESOLUTION)+1, 2*(this->RANGE_Y/this->RESOLUTION)+1);
-        cv::Mat frame(frame_size, CV_8UC3, this->BACKGROUND_COLOR);
+        cv::Size frame_size(2*(m_range_x/m_resolution)+1, 2*(m_range_y/m_resolution)+1);
+        cv::Mat frame(frame_size, CV_8UC3, this->m_background_color);
         RCLCPP_INFO(this->get_logger(), "---");
-        RCLCPP_INFO(this->get_logger(), "stamp: %d.%09d", laser_cp->header.stamp.sec, laser_cp->header.stamp.nanosec);
-        RCLCPP_INFO(this->get_logger(), "range_range: %.3f - %.3f", laser_cp->range_min, laser_cp->range_max);
-        RCLCPP_INFO(this->get_logger(), "angle_range: %.3f - %.3f", laser_cp->angle_min * TO_DEG, laser_cp->angle_max * TO_DEG);
-        RCLCPP_INFO(this->get_logger(), "angle++: %f", laser_cp->angle_increment * TO_DEG);
-        RCLCPP_INFO(this->get_logger(), "time++ : %f", laser_cp->time_increment);
-        RCLCPP_INFO(this->get_logger(), "ranges_size: %ld", laser_cp->ranges.size());
+        RCLCPP_INFO(this->get_logger(), "stamp: %d.%09d", msg_ptr->header.stamp.sec, msg_ptr->header.stamp.nanosec);
+        RCLCPP_INFO(this->get_logger(), "range_range: %.3f - %.3f", msg_ptr->range_min, msg_ptr->range_max);
+        RCLCPP_INFO(this->get_logger(), "angle_range: %.3f - %.3f", msg_ptr->angle_min * TO_DEG, msg_ptr->angle_max * TO_DEG);
+        RCLCPP_INFO(this->get_logger(), "angle++: %f", msg_ptr->angle_increment * TO_DEG);
+        RCLCPP_INFO(this->get_logger(), "time++ : %f", msg_ptr->time_increment);
+        RCLCPP_INFO(this->get_logger(), "ranges_size: %ld", msg_ptr->ranges.size());
 
-        for(int i=0, size=laser_cp->ranges.size(); i<size; i++){
-            int x = frame.cols/2 - laser_cp->ranges[i] * std::sin(laser_cp->angle_increment * i + laser_cp->angle_min) / this->RESOLUTION;
-            int y = frame.rows/2 - laser_cp->ranges[i] * std::cos(laser_cp->angle_increment * i + laser_cp->angle_min) / this->RESOLUTION;
+        for(int i=0, size=msg_ptr->ranges.size(); i<size; i++){
+            int x = frame.cols/2 - msg_ptr->ranges[i] * std::sin(msg_ptr->angle_increment * i + msg_ptr->angle_min) / m_resolution;
+            int y = frame.rows/2 - msg_ptr->ranges[i] * std::cos(msg_ptr->angle_increment * i + msg_ptr->angle_min) / m_resolution;
 
             if(x<0 || frame.cols<=x) continue;
             if(y<0 || frame.rows<=y) continue;
 
-            frame.at<cv::Vec3b>(y,x) = this->POINT_COLOR;
+            frame.at<cv::Vec3b>(y,x) = this->m_point_color;
         }
 
         cv::imshow("frame", frame);

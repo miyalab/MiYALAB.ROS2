@@ -38,17 +38,16 @@ public:
     LaserScanViewer(rclcpp::NodeOptions options = rclcpp::NodeOptions());
     ~LaserScanViewer();
 private:
-    std::mutex laser_mutex;
-    sensor_msgs::msg::LaserScan::SharedPtr laser;
-    rclcpp::Subscription<sensor_msgs::msg::LaserScan>::SharedPtr laser_subscriber;
-    void onLaserScanSubscribed(const sensor_msgs::msg::LaserScan::SharedPtr msg);
+    std::mutex m_mutex;
+    sensor_msgs::msg::LaserScan::SharedPtr m_msg_ptr;
+    rclcpp::Subscription<sensor_msgs::msg::LaserScan>::SharedPtr m_subscriber;
+    void onMsgSubscribed(const sensor_msgs::msg::LaserScan::SharedPtr msg);
     
-    double RESOLUTION = -1;
-    double RANGE_X = -1, RANGE_Y = -1;
-    cv::Vec3b BACKGROUND_COLOR = {0,0,0};
-    cv::Vec3b POINT_COLOR = {255,255,255};
-    template<typename T, typename U>void forceSet(const T *value, const U &set){*((T*)value)=set;}
-    std::unique_ptr<std::thread> thread;
+    double m_resolution = -1;
+    double m_range_x = -1, m_range_y = -1;
+    cv::Vec3b m_background_color = {0,0,0};
+    cv::Vec3b m_point_color = {255,255,255};
+    std::unique_ptr<std::thread> m_thread;
     void run();
 };
 }

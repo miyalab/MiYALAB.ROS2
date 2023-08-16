@@ -38,38 +38,19 @@ namespace ROS2{
  * 
  * @param options 
  */
-ImageViewer::ImageViewer(rclcpp::NodeOptions options) : rclcpp::Node("laser_scan_viewer", options)
+ImageViewer::ImageViewer(rclcpp::NodeOptions options) : rclcpp::Node("image_viewer", options)
 {
     // Using placeholders
     using std::placeholders::_1;
-    using std::placeholders::_2;
-    using std::placeholders::_3;
-
-    // Initialize parameters
-    RCLCPP_INFO(this->get_logger(), "Initialize parameters...");
-    this->image = std::make_shared<Image>();
-    RCLCPP_INFO(this->get_logger(), "Complete! Parameters were initialized.");
-
+    
     // Initialize subscriber
     RCLCPP_INFO(this->get_logger(), "Initialize subscribers...");
-    this->laser_subscriber = this->create_subscription<Image>("/camera/image", 10, std::bind(&ImageViewer::onImageSubscribed, this, _1));
+    m_subscriber = this->create_subscription<Image>("/camera/image", 10, std::bind(&ImageViewer::onMsgSubscribed, this, _1));
     RCLCPP_INFO(this->get_logger(), "Complete! Subscribers were initialized.");
 
-    // Initialize publisher
-    // RCLCPP_INFO(this->get_logger(), "Initialize publishers...");
-    // RCLCPP_INFO(this->get_logger(), "Complete! Publishers were initialized.");
-
-    // Initialize Service-Server
-    // RCLCPP_INFO(this->get_logger(), "Initialize service-servers...");
-    // RCLCPP_INFO(this->get_logger(), "Complete! Service-servers were initialized.");
-
-    // Initialize Service-Client 
-    // RCLCPP_INFO(this->get_logger(), "Initialize service-clients...");
-    // RCLCPP_INFO(this->get_logger(), "Complete! Service-clients were initialized.");
-
     // Main loop processing
-    this->thread = std::make_unique<std::thread>(&ImageViewer::run, this);
-    this->thread->detach();
+    m_thread = std::make_unique<std::thread>(&ImageViewer::run, this);
+    m_thread->detach();
 }
 
 /**
@@ -78,15 +59,14 @@ ImageViewer::ImageViewer(rclcpp::NodeOptions options) : rclcpp::Node("laser_scan
  */
 ImageViewer::~ImageViewer()
 {
-    this->thread.release();
+    m_thread.release();
 }
 
-void ImageViewer::onImageSubscribed(const Image::SharedPtr msg)
+void ImageViewer::onMsgSubscribed(const Image::SharedPtr msg)
 {
-    // RCLCPP_INFO(this->get_logger(), "subscribed");
-    this->image_mutex.lock();
-    this->image = msg;
-    this->image_mutex.unlock();
+    m_mutex.lock();
+    m_msg_ptr = msg;
+    m_mutex.unlock();
 }
 
 /**
@@ -99,10 +79,10 @@ void ImageViewer::run()
     
     // Main loop
     for(rclcpp::WallRate loop(10); rclcpp::ok(); loop.sleep()){
-        this->image_mutex.lock();
-        auto image_ptr = this->image;
-        this->image = nullptr;
-        this->image_mutex.unlock();
+        m_mutex.lock();
+        auto image_ptr = m_msg_ptr;
+        m_msg_ptr = nullptr;
+        m_mutex.unlock();
         if(!image_ptr.get()) continue;
         if(image_ptr->data.empty()) continue;
 

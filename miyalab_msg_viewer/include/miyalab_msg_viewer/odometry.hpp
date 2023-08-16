@@ -37,13 +37,13 @@ public:
     OdometryViewer(rclcpp::NodeOptions options = rclcpp::NodeOptions());
     ~OdometryViewer();
 private:
-    std::mutex odom_mutex;
-    nav_msgs::msg::Odometry::SharedPtr odom;
-    rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr odom_subscriber;
-    void onOdometrySubscribed(const nav_msgs::msg::Odometry::SharedPtr msg);
+    std::mutex m_mutex;
+    nav_msgs::msg::Odometry::SharedPtr m_msg_ptr;
+    rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr m_subscriber;
+    void onMsgSubscribed(const nav_msgs::msg::Odometry::SharedPtr msg);
     
     static geometry_msgs::msg::Vector3 toRPY(const geometry_msgs::msg::Quaternion &quaternion);
-    std::unique_ptr<std::thread> thread;
+    std::unique_ptr<std::thread> m_thread;
     void run();
 };
 }

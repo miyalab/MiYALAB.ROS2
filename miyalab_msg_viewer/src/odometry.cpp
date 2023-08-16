@@ -40,34 +40,20 @@ OdometryViewer::OdometryViewer(rclcpp::NodeOptions options) : rclcpp::Node("odom
 {
     // Using placeholders
     using std::placeholders::_1;
-    using std::placeholders::_2;
-    using std::placeholders::_3;
 
     // Initialize parameters
     RCLCPP_INFO(this->get_logger(), "Initialize parameters...");
-    this->odom = std::make_shared<Odometry>();
+    m_msg_ptr = std::make_shared<Odometry>();
     RCLCPP_INFO(this->get_logger(), "Complete! Parameters were initialized.");
 
     // Initialize subscriber
     RCLCPP_INFO(this->get_logger(), "Initialize subscribers...");
-    this->odom_subscriber = this->create_subscription<Odometry>("/camera/image", 10, std::bind(&OdometryViewer::onOdometrySubscribed, this, _1));
+    m_subscriber = this->create_subscription<Odometry>("/camera/image", 10, std::bind(&OdometryViewer::onMsgSubscribed, this, _1));
     RCLCPP_INFO(this->get_logger(), "Complete! Subscribers were initialized.");
 
-    // Initialize publisher
-    // RCLCPP_INFO(this->get_logger(), "Initialize publishers...");
-    // RCLCPP_INFO(this->get_logger(), "Complete! Publishers were initialized.");
-
-    // Initialize Service-Server
-    // RCLCPP_INFO(this->get_logger(), "Initialize service-servers...");
-    // RCLCPP_INFO(this->get_logger(), "Complete! Service-servers were initialized.");
-
-    // Initialize Service-Client 
-    // RCLCPP_INFO(this->get_logger(), "Initialize service-clients...");
-    // RCLCPP_INFO(this->get_logger(), "Complete! Service-clients were initialized.");
-
     // Main loop processing
-    this->thread = std::make_unique<std::thread>(&OdometryViewer::run, this);
-    this->thread->detach();
+    m_thread = std::make_unique<std::thread>(&OdometryViewer::run, this);
+    m_thread->detach();
 }
 
 /**
@@ -76,15 +62,14 @@ OdometryViewer::OdometryViewer(rclcpp::NodeOptions options) : rclcpp::Node("odom
  */
 OdometryViewer::~OdometryViewer()
 {
-    this->thread.release();
+    m_thread.release();
 }
 
-void OdometryViewer::onOdometrySubscribed(const Odometry::SharedPtr msg)
+void OdometryViewer::onMsgSubscribed(const Odometry::SharedPtr msg)
 {
-    // RCLCPP_INFO(this->get_logger(), "subscribed");
-    this->odom_mutex.lock();
-    this->odom = msg;
-    this->odom_mutex.unlock();
+    m_mutex.lock();
+    m_msg_ptr = msg;
+    m_mutex.unlock();
 }
 
 Vector3 OdometryViewer::toRPY(const Quaternion &quaternion)
@@ -120,10 +105,10 @@ void OdometryViewer::run()
     
     // Main loop
     for(rclcpp::WallRate loop(10); rclcpp::ok(); loop.sleep()){
-        this->odom_mutex.lock();
-        auto odom_ptr = this->odom;
-        this->odom = nullptr;
-        this->odom_mutex.unlock();
+        m_mutex.lock();
+        auto odom_ptr = m_msg_ptr;
+        m_msg_ptr = nullptr;
+        m_mutex.unlock();
         if(!odom_ptr.get()) continue;
 
         RCLCPP_INFO(this->get_logger(), "---");

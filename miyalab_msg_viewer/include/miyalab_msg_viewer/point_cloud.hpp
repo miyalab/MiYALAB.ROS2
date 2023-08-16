@@ -38,18 +38,16 @@ public:
     PointCloudViewer(rclcpp::NodeOptions options = rclcpp::NodeOptions());
     virtual ~PointCloudViewer();
 private:    
-    std::mutex points_mutex;
-    sensor_msgs::msg::PointCloud::SharedPtr points;
-    rclcpp::Subscription<sensor_msgs::msg::PointCloud>::SharedPtr points_subscriber;
-    void onPointsSubscribed(const sensor_msgs::msg::PointCloud::SharedPtr msg);
+    std::mutex m_mutex;
+    sensor_msgs::msg::PointCloud::SharedPtr m_msg_ptr;
+    rclcpp::Subscription<sensor_msgs::msg::PointCloud>::SharedPtr m_subscriber;
+    void onMsgSubscribed(const sensor_msgs::msg::PointCloud::SharedPtr msg);
     
-    double RESOLUTION = -1;
-    double RANGE_X = -1, RANGE_Y = -1;
-    cv::Vec3b BACKGROUND_COLOR = {0,0,0};
-    cv::Vec3b POINT_COLOR = {255,255,255};
-    const int LOOP_RATE = -1;
-    template<typename T, typename U>void forceSet(const T *value, const U &set_value){*((T*)value)=set_value;}
-    std::unique_ptr<std::thread> thread;
+    double m_resolution = -1;
+    double m_range_x = -1, m_range_y = -1;
+    cv::Vec3b m_background_color = {0,0,0};
+    cv::Vec3b m_point_color = {255,255,255};
+    std::unique_ptr<std::thread> m_thread;
     void run();
 };
 }

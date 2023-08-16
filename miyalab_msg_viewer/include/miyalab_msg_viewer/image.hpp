@@ -38,12 +38,12 @@ public:
     ImageViewer(rclcpp::NodeOptions options = rclcpp::NodeOptions());
     ~ImageViewer();
 private:
-    std::mutex image_mutex;
-    sensor_msgs::msg::Image::SharedPtr image;
-    rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr laser_subscriber;
-    void onImageSubscribed(const sensor_msgs::msg::Image::SharedPtr msg);
+    std::mutex m_mutex;
+    sensor_msgs::msg::Image::SharedPtr m_msg_ptr;
+    rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr m_subscriber;
+    void onMsgSubscribed(const sensor_msgs::msg::Image::SharedPtr msg);
     
-    std::unique_ptr<std::thread> thread;
+    std::unique_ptr<std::thread> m_thread;
     void run();
 };
 }
