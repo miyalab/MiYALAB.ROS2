@@ -51,17 +51,17 @@ ament_target_dependencies(${PROJECT_NAME}
   cv_bridge
 )
 
-install(TARGETS miyalab_msg_viewer EXPORT export_miyalab_msg_viewer
+install(TARGETS ${PROJECT_NAME} EXPORT export_miyalab_msg_viewer
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib
   RUNTIME DESTINATION bin
 )
 
-rclcpp_components_register_node(miyalab_msg_viewer PLUGIN "MiYALAB::ROS2::OdometryViewer" EXECUTABLE "odometry_msg_viewer_node")
-rclcpp_components_register_node(miyalab_msg_viewer PLUGIN "MiYALAB::ROS2::LaserScanViewer" EXECUTABLE "laser_scan_msg_viewer")
-rclcpp_components_register_node(miyalab_msg_viewer PLUGIN "MiYALAB::ROS2::ImageViewer" EXECUTABLE "image_msg_viewer")
-rclcpp_components_register_node(miyalab_msg_viewer PLUGIN "MiYALAB::ROS2::PointCloudViewer" EXECUTABLE "point_cloud_viewer")
-rclcpp_components_register_node(miyalab_msg_viewer PLUGIN "MiYALAB::ROS2::PointCloud2Viewer" EXECUTABLE "point_cloud2_viewer")
+rclcpp_components_register_node(${PROJECT_NAME} PLUGIN "MiYALAB::ROS2::OdometryViewer" EXECUTABLE "odometry_msg_viewer_node")
+rclcpp_components_register_node(${PROJECT_NAME} PLUGIN "MiYALAB::ROS2::LaserScanViewer" EXECUTABLE "laser_scan_msg_viewer")
+rclcpp_components_register_node(${PROJECT_NAME} PLUGIN "MiYALAB::ROS2::ImageViewer" EXECUTABLE "image_msg_viewer")
+rclcpp_components_register_node(${PROJECT_NAME} PLUGIN "MiYALAB::ROS2::PointCloudViewer" EXECUTABLE "point_cloud_viewer")
+rclcpp_components_register_node(${PROJECT_NAME} PLUGIN "MiYALAB::ROS2::PointCloud2Viewer" EXECUTABLE "point_cloud2_viewer")
 
 # install(TARGETS ${PROJECT_NAME} DESTINATION lib)
 
