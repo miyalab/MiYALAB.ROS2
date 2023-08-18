@@ -39,36 +39,35 @@ public:
     ~ManualRobotController2D();
 private:
     // joystick関連
-    std::mutex joy_state_mutex;
-    sensor_msgs::msg::Joy::SharedPtr joy_state;
-    rclcpp::Subscription<sensor_msgs::msg::Joy>::SharedPtr joy_state_subscriber;
+    std::mutex m_joy_state_mutex;
+    sensor_msgs::msg::Joy::SharedPtr m_joy_state;
+    rclcpp::Subscription<sensor_msgs::msg::Joy>::SharedPtr m_joy_state_subscriber;
     void setJoyState(const sensor_msgs::msg::Joy::SharedPtr joy);
 
     // ロボット速度関連
-    rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr robot_vel_publisher;
+    rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr m_robot_vel_publisher;
     
     // Run状態
-    bool is_active = false;
-    std::mutex is_active_mutex;
-    rclcpp::Publisher<std_msgs::msg::Bool>::SharedPtr is_active_publisher;
-    rclcpp::Service<std_srvs::srv::SetBool>::SharedPtr set_active_server;
+    bool m_is_active = false;
+    std::mutex m_is_active_mutex;
+    rclcpp::Publisher<std_msgs::msg::Bool>::SharedPtr m_is_active_publisher;
+    rclcpp::Service<std_srvs::srv::SetBool>::SharedPtr m_set_active_server;
     void serviceSetActive(const std::shared_ptr<rmw_request_id_t> header, 
                           const std_srvs::srv::SetBool::Request::SharedPtr request,
                           const std_srvs::srv::SetBool::Response::SharedPtr response);
 
     // 処理用
-    const int LOOP_RATE = -1;
-    const int ACTIVE_BUTTON_NUM = -1;
-    const int INACTIVE_BUTTON_NUM = -1;
-    const double LINEAR_GAIN = -0.0;
-    const double ANGULAR_GAIN = -0.0;
-    const int LINEAR_X_JOY_NUM = -1;
-    const int LINEAR_Y_JOY_NUM = -1;
-    const int ANGULAR_Z_JOY_NUM = -1;
-    const int SLOW_TRIGGER_NUM = -1;
-    const int FAST_TRIGGER_NUM = -1;
-    template<typename T, typename U>void forceSet(const T *value, const U &set){*((T*)value)=set;}
-    std::unique_ptr<std::thread> thread;
+    int m_rate = -1;
+    int m_active_button_num = -1;
+    int m_inactive_button_num = -1;
+    double m_linear_gain = -0.0;
+    double m_angular_gain = -0.0;
+    int m_linear_x_joy_num = -1;
+    int m_linear_y_joy_num = -1;
+    int m_angular_z_joy_num = -1;
+    int m_slow_trigger_num = -1;
+    int m_fast_trigger_num = -1;
+    std::unique_ptr<std::thread> m_thread;
     void run();
 };
 }

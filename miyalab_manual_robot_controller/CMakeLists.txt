@@ -39,7 +39,7 @@ ament_target_dependencies(${PROJECT_NAME}
   sensor_msgs
   geometry_msgs
 )
-rclcpp_components_register_nodes(${PROJECT_NAME} "MiYALAB::ROS2::ManualRobotController2D")
+rclcpp_components_register_node(${PROJECT_NAME} PLUGIN "MiYALAB::ROS2::ManualRobotController2D" EXECUTABLE robot2d_run)
 
 install(TARGETS ${PROJECT_NAME} DESTINATION lib)
 

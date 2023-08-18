@@ -37,11 +37,6 @@ namespace ROS2{
  */
 Joystick::Joystick(rclcpp::NodeOptions options) : rclcpp::Node("joystick", options)
 {
-    // Using placeholders
-    using std::placeholders::_1;
-    using std::placeholders::_2;
-    using std::placeholders::_3;
-
     // Initialize parameters
     RCLCPP_INFO(this->get_logger(), "Initialize parameters...");
     m_device_path = this->declare_parameter("joystick.path", "/dev/input/js0");
