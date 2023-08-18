@@ -37,17 +37,16 @@ public:
     ~Joystick();
 private:
     // joystick関連
-    int handler = -1;
-    rclcpp::Publisher<sensor_msgs::msg::Joy>::SharedPtr state_publisher;
-    rclcpp::Publisher<std_msgs::msg::Bool>::SharedPtr is_connected_publisher;
+    int m_handler = -1;
+    rclcpp::Publisher<sensor_msgs::msg::Joy>::SharedPtr m_state_publisher;
+    rclcpp::Publisher<std_msgs::msg::Bool>::SharedPtr m_is_connected_publisher;
 
     // 処理用
-    const int RATE = 1;
-    const float DEAD_ZONE = -1.0;
-    const std::string DEVICE_PATH = "";
-    template<typename T, typename U>void forceSet(const T *value, const U &set){*((T*)value)=set;}
+    int m_rate = -1;
+    float m_dead_zone = -1.0;
+    std::string m_device_path = "";
 
-    std::unique_ptr<std::thread> thread;
+    std::unique_ptr<std::thread> m_thread;
     void run();
 };
 }
