@@ -48,7 +48,7 @@ OdometryViewer::OdometryViewer(rclcpp::NodeOptions options) : rclcpp::Node("odom
 
     // Initialize subscriber
     RCLCPP_INFO(this->get_logger(), "Initialize subscribers...");
-    m_subscriber = this->create_subscription<Odometry>("/camera/image", 10, std::bind(&OdometryViewer::onMsgSubscribed, this, _1));
+    m_subscriber = this->create_subscription<Odometry>("/odom", 10, std::bind(&OdometryViewer::onMsgSubscribed, this, _1));
     RCLCPP_INFO(this->get_logger(), "Complete! Subscribers were initialized.");
 
     // Main loop processing
