@@ -21,7 +21,7 @@
 // Class
 //-----------------------------
 /**
- * @brief Project Name
+ * @brief MiYALAB ROS2 Library
  * 
  */
 namespace MiYALAB {

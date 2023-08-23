@@ -18,7 +18,6 @@ endif()
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
-find_package(rclcpp_components REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
@@ -31,18 +30,11 @@ include_directories(
 
 ament_target_dependencies(${PROJECT_NAME} 
   rclcpp
-  rclcpp_components
   std_msgs
   geometry_msgs
   sensor_msgs
 )
 
 install(TARGETS ${PROJECT_NAME} DESTINATION lib)
-
-# yaml
-install(DIRECTORY cfg DESTINATION share/${PROJECT_NAME}/)
-
-# launch
-install(DIRECTORY launch DESTINATION share/${PROJECT_NAME}/)
 
 ament_package()

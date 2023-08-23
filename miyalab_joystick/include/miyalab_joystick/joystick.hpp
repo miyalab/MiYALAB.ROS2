@@ -1,5 +1,5 @@
-#ifndef __MIYALAB_ROS2_DRIVER_JOYSTICK_HPP__
-#define __MIYALAB_ROS2_DRIVER_JOYSTICK_HPP__
+#ifndef __MIYALAB_ROS2_DRIVER_JOYSTICK_JOYSTICK_HPP__
+#define __MIYALAB_ROS2_DRIVER_JOYSTICK_JOYSTICK_HPP__
 
 //-----------------------------
 // include
@@ -22,13 +22,13 @@
 // Class
 //-----------------------------
 /**
- * @brief Project Name
+ * @brief MiYALAB ROS2
  * 
  */
 namespace MiYALAB {
 namespace ROS2{
 /**
- * @brief Component Definition
+ * @brief Joystick
  * 
  */
 class Joystick: public rclcpp::Node {
@@ -52,7 +52,7 @@ private:
 }
 }
 
-#endif // __MIYALAB_ROS2_DRIVER_JOYSTICK_HPP__
+#endif // __MIYALAB_ROS2_DRIVER_JOYSTICK_JOYSTICK_HPP__
 
 //-----------------------------------------------------------------------------------
 // end of file

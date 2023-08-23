@@ -23,13 +23,13 @@
 // Class
 //-----------------------------
 /**
- * @brief Project Name
+ * @brief MiYALAB ROS2
  * 
  */
 namespace MiYALAB {
 namespace ROS2{
 /**
- * @brief Component Definition
+ * @brief Odometry viewer
  * 
  */
 class OdometryViewer: public rclcpp::Node {

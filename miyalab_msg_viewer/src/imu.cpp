@@ -30,7 +30,7 @@ constexpr double TO_DEG = 180 / M_PI;
 // Methods
 //-----------------------------
 /**
- * @brief Project name
+ * @brief MiYALAB ROS2
  * 
  */
 namespace MiYALAB{

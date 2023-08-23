@@ -25,7 +25,7 @@
 // Methods
 //-----------------------------
 /**
- * @brief Project name
+ * @brief MiYALAB ROS2
  * 
  */
 namespace MiYALAB{

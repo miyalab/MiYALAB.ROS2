@@ -39,7 +39,7 @@ constexpr char DATATYPE_STR[][8] = {
 // Methods
 //-----------------------------
 /**
- * @brief Project name
+ * @brief MiYALAB ROS2
  * 
  */
 namespace MiYALAB{

@@ -26,7 +26,7 @@ using geometry_msgs::msg::Quaternion;
 // Methods
 //-----------------------------
 /**
- * @brief Project name
+ * @brief MiYALAB ROS2
  * 
  */
 namespace MiYALAB{

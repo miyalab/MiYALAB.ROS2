@@ -35,7 +35,7 @@ ament_target_dependencies(${PROJECT_NAME}
   std_msgs
   sensor_msgs
 )
-rclcpp_components_register_node(${PROJECT_NAME} PLUGIN "MiYALAB::ROS2::Joystick" EXECUTABLE joystick)
+rclcpp_components_register_node(${PROJECT_NAME} PLUGIN "MiYALAB::ROS2::Joystick" EXECUTABLE joystick_node)
 
 install(TARGETS ${PROJECT_NAME} DESTINATION lib)
 
