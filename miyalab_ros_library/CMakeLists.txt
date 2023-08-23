@@ -22,16 +22,12 @@ find_package(rclcpp_components REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
-find_package(miyalab_interfaces REQUIRED)
 
 include_directories(
   include
-  lib
 )
-add_library(${PROJECT_NAME} SHARED
-  src/simple_detector_using_point_cloud.cpp
-  lib/ObstacleDetector/SimpleObstacleDetector.cpp
-)
+# add_library(${PROJECT_NAME} SHARED
+# )
 
 ament_target_dependencies(${PROJECT_NAME} 
   rclcpp
@@ -39,11 +35,7 @@ ament_target_dependencies(${PROJECT_NAME}
   std_msgs
   geometry_msgs
   sensor_msgs
-  OpenCV
-  cv_bridge
-  miyalab_interfaces
 )
-rclcpp_components_register_nodes(${PROJECT_NAME} "MiYALAB::ROS2::SimpleObstacleDetectorUsingPointCloud")
 
 install(TARGETS ${PROJECT_NAME} DESTINATION lib)
 
