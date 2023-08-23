@@ -30,6 +30,7 @@ include_directories(
   include
 )
 add_library(${PROJECT_NAME} SHARED
+  src/imu.cpp
   src/laser_scan.cpp
   src/image.cpp
   src/point_cloud.cpp
@@ -50,6 +51,7 @@ ament_target_dependencies(${PROJECT_NAME}
 rclcpp_components_register_node(${PROJECT_NAME} PLUGIN "MiYALAB::ROS2::OdometryViewer" EXECUTABLE "odometry_msg_viewer_node")
 rclcpp_components_register_node(${PROJECT_NAME} PLUGIN "MiYALAB::ROS2::LaserScanViewer" EXECUTABLE "laser_scan_msg_viewer")
 rclcpp_components_register_node(${PROJECT_NAME} PLUGIN "MiYALAB::ROS2::ImageViewer" EXECUTABLE "image_msg_viewer")
+rclcpp_components_register_node(${PROJECT_NAME} PLUGIN "MiYALAB::ROS2::ImuViewer" EXECUTABLE "imu_msg_viewer")
 rclcpp_components_register_node(${PROJECT_NAME} PLUGIN "MiYALAB::ROS2::PointCloudViewer" EXECUTABLE "point_cloud_viewer")
 rclcpp_components_register_node(${PROJECT_NAME} PLUGIN "MiYALAB::ROS2::PointCloud2Viewer" EXECUTABLE "point_cloud2_viewer")
 install(TARGETS ${PROJECT_NAME} DESTINATION lib)
