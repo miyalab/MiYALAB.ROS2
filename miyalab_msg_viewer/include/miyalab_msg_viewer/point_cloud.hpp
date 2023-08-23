@@ -24,13 +24,13 @@
 // Class
 //-----------------------------
 /**
- * @brief Project Name
+ * @brief MiYALAB ROS2
  * 
  */
 namespace MiYALAB {
 namespace ROS2{
 /**
- * @brief Component Definition
+ * @brief PointCloud viewer
  * 
  */
 class PointCloudViewer: public rclcpp::Node {
