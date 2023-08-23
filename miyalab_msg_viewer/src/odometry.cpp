@@ -77,15 +77,15 @@ Vector3 OdometryViewer::toRPY(const Quaternion &quaternion)
     geometry_msgs::msg::Vector3 ret;
 
     const double q0q0 = quaternion.w * quaternion.w;
-	const double q1q1 = quaternion.x * quaternion.x;
-	const double q2q2 = quaternion.y * quaternion.y;
-	const double q3q3 = quaternion.z * quaternion.z;
-	const double q0q1 = quaternion.w * quaternion.x;
-	const double q0q2 = quaternion.w * quaternion.y;
-	const double q0q3 = quaternion.w * quaternion.z;
-	const double q1q2 = quaternion.x * quaternion.y;
-	const double q1q3 = quaternion.x * quaternion.z;
-	const double q2q3 = quaternion.y * quaternion.z;
+    const double q1q1 = quaternion.x * quaternion.x;
+    const double q2q2 = quaternion.y * quaternion.y;
+    const double q3q3 = quaternion.z * quaternion.z;
+    const double q0q1 = quaternion.w * quaternion.x;
+    const double q0q2 = quaternion.w * quaternion.y;
+    const double q0q3 = quaternion.w * quaternion.z;
+    const double q1q2 = quaternion.x * quaternion.y;
+    const double q1q3 = quaternion.x * quaternion.z;
+    const double q2q3 = quaternion.y * quaternion.z;
 
     ret.x = std::atan2(2.0 * (q2q3 + q0q1), q0q0 - q1q1 - q2q2 + q3q3);
     ret.y = -std::asin(2.0 * (q1q3 - q0q2));
