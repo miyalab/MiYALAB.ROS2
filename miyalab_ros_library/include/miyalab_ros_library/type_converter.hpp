@@ -18,12 +18,8 @@
 //-----------------------------
 
 //-----------------------------
-// Class
+// Functions
 //-----------------------------
-/**
- * @brief MiYALAB ROS2 Library
- * 
- */
 namespace MiYALAB {
 namespace ROS2{
 inline geometry_msgs::msg::Quaternion toQuaternion(const geometry_msgs::msg::Vector3 &rpy)
