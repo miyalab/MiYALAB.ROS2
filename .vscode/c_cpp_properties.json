@@ -12,6 +12,7 @@
         "${workspaceFolder}/miyalab_manual_robot_controller/include/**",
         "${workspaceFolder}/miyalab_obstacle_detector/include/**",
         "~/workspace/ros2_ws/install/miyalab_interfaces/include/**",
+        "~/workspace/ros2_ws/install/miyalab_ros_library/include/**",
         "/opt/ros/humble/include/**",
         // "/opt/ros/foxy/include/**",
         "/usr/include/**"

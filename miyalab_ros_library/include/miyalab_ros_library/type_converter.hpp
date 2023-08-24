@@ -26,15 +26,15 @@
  */
 namespace MiYALAB {
 namespace ROS2{
-inline geometry_msgs::msg::Quaternion toQuaternion(const geometry_msgs::msg::Vector3 &vector)
+inline geometry_msgs::msg::Quaternion toQuaternion(const geometry_msgs::msg::Vector3 &rpy)
 {
     geometry_msgs::msg::Quaternion ret;
-    const double cy = std::cos(vector.z * 0.5);
-    const double sy = std::sin(vector.z * 0.5);
-    const double cp = std::cos(vector.y * 0.5);
-    const double sp = std::sin(vector.y * 0.5);
-    const double cr = std::cos(vector.x * 0.5);
-    const double sr = std::sin(vector.x * 0.5);
+    const double cy = std::cos(rpy.z * 0.5);
+    const double sy = std::sin(rpy.z * 0.5);
+    const double cp = std::cos(rpy.y * 0.5);
+    const double sp = std::sin(rpy.y * 0.5);
+    const double cr = std::cos(rpy.x * 0.5);
+    const double sr = std::sin(rpy.x * 0.5);
     ret.w = cr * cp * cy + sr * sp * sy;
     ret.x = sr * cp * cy - cr * sp * sy;
     ret.y = cr * sp * cy + sr * cp * sy;
@@ -42,7 +42,7 @@ inline geometry_msgs::msg::Quaternion toQuaternion(const geometry_msgs::msg::Vec
     return ret;
 }
 
-inline geometry_msgs::msg::Vector3 toVector(const geometry_msgs::msg::Quaternion &quaternion)
+inline geometry_msgs::msg::Vector3 toRPY(const geometry_msgs::msg::Quaternion &quaternion)
 {
     geometry_msgs::msg::Vector3 ret;
     const double q0q0 = quaternion.w * quaternion.w;
@@ -66,7 +66,7 @@ inline geometry_msgs::msg::Pose2D toPose2D(const geometry_msgs::msg::Pose &pose)
     geometry_msgs::msg::Pose2D ret;
     ret.x = pose.position.x;
     ret.y = pose.position.y;
-    ret.theta = toVector(pose.orientation).z;
+    ret.theta = toRPY(pose.orientation).z;
     return ret;
 }
 

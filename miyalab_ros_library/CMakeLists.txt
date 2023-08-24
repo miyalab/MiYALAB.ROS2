@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-project(miyalab_obstacle_detector)
+project(miyalab_ros_library)
 
 # Default to C99
 if(NOT CMAKE_C_STANDARD)
@@ -17,7 +17,6 @@ endif()
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
-find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
@@ -25,11 +24,11 @@ find_package(sensor_msgs REQUIRED)
 include_directories(
   include
 )
-# add_library(${PROJECT_NAME} SHARED
-# )
+add_library(${PROJECT_NAME} SHARED
+  src/type_converter.cpp
+)
 
 ament_target_dependencies(${PROJECT_NAME} 
-  rclcpp
   std_msgs
   geometry_msgs
   sensor_msgs
@@ -37,4 +36,5 @@ ament_target_dependencies(${PROJECT_NAME}
 
 install(TARGETS ${PROJECT_NAME} DESTINATION lib)
 
+install(DIRECTORY include/ DESTINATION include/${PROJECT_NAME})
 ament_package()
