@@ -58,9 +58,6 @@ rclcpp_components_register_node(${PROJECT_NAME} PLUGIN "MiYALAB::ROS2::PointClou
 rclcpp_components_register_node(${PROJECT_NAME} PLUGIN "MiYALAB::ROS2::PointCloud2Viewer" EXECUTABLE "point_cloud2_viewer")
 install(TARGETS ${PROJECT_NAME} DESTINATION lib)
 
-# include
-install(DIRECTORY include/ DESTINATION include/${PROJECT_NAME})
-
 # yaml
 install(DIRECTORY cfg DESTINATION share/${PROJECT_NAME}/)
 
