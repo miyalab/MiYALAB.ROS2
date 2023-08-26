@@ -11,6 +11,8 @@
 #include "geometry_msgs/to_quaternion.hpp"
 #include "geometry_msgs/to_rpy.hpp"
 
+#include "sensor_msgs/to_point_cloud.hpp"
+
 #endif // __MIYALAB_ROS2_LIBRARY_TYPE_CONVERTER_TYPE_CONVERTER_HPP__
 
 //-----------------------------------------------------------------------------------
