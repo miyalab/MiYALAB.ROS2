@@ -1,5 +1,5 @@
-#ifndef __MIYALAB_ROS2_LIBRARY_SAVE_FUNCTIONS_POINT_CLOUD_HPP__
-#define __MIYALAB_ROS2_LIBRARY_SAVE_FUNCTIONS_POINT_CLOUD_HPP__
+#ifndef __MIYALAB_ROS2_LIBRARY_SAVE_FUNCTIONS_SENSOR_MSGS_POINT_CLOUD_HPP__
+#define __MIYALAB_ROS2_LIBRARY_SAVE_FUNCTIONS_SENSOR_MSGS_POINT_CLOUD_HPP__
 
 //-----------------------------
 // include
@@ -68,7 +68,7 @@ bool savePointCloudAscii(const std::string &path, const sensor_msgs::msg::PointC
 }
 }
 
-#endif // __MIYALAB_ROS2_LIBRARY_SAVE_FUNCTIONS_POINT_CLOUD_HPP__
+#endif // __MIYALAB_ROS2_LIBRARY_SAVE_FUNCTIONS_SENSOR_MSGS_POINT_CLOUD_HPP__
 
 //-----------------------------------------------------------------------------------
 // end of file
