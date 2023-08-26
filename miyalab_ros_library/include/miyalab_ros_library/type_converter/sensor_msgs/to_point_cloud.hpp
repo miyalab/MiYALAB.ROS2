@@ -44,6 +44,17 @@ static inline sensor_msgs::msg::PointCloud toPointCloud(const sensor_msgs::msg::
 
     return ret;
 }
+
+/**
+ * @brief Convert LaserScan to PointCloud 
+ * 
+ * @param laser  input
+ * @param points output
+ */
+static inline void toPointCloud(const sensor_msgs::msg::LaserScan &laser, sensor_msgs::msg::PointCloud *points)
+{
+    *points = MiYALAB::ROS2::toPointCloud(laser);
+}
 }
 }
 
