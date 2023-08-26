@@ -15,10 +15,6 @@
 #include "miyalab_ros_library/type_converter/geometry_msgs/to_rpy.hpp"
 
 //-----------------------------
-// Namespace & using
-//-----------------------------
-
-//-----------------------------
 // Functions
 //-----------------------------
 namespace MiYALAB {
@@ -81,7 +77,6 @@ bool saveRobotState(const std::string &path, const miyalab_interfaces::msg::Robo
     ofs << std::endl;
     ofs.close();
 }
-
 }
 }
 

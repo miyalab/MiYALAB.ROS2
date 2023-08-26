@@ -11,10 +11,6 @@
 #include <sensor_msgs/msg/point_cloud.hpp>
 
 //-----------------------------
-// Namespace & using
-//-----------------------------
-
-//-----------------------------
 // Functions
 //-----------------------------
 namespace MiYALAB {
@@ -64,7 +60,6 @@ bool savePointCloudAscii(const std::string &path, const sensor_msgs::msg::PointC
 
     return true;
 }
-
 }
 }
 
