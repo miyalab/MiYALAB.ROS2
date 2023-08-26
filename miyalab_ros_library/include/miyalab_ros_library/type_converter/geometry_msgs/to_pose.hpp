@@ -16,6 +16,12 @@
 //-----------------------------
 namespace MiYALAB {
 namespace ROS2{
+/**
+ * @brief Convert Pose2D to Pose
+ * 
+ * @param pose2d 
+ * @return geometry_msgs::msg::Pose 
+ */
 inline geometry_msgs::msg::Pose toPose(const geometry_msgs::msg::Pose2D &pose2d)
 {
     geometry_msgs::msg::Pose ret;

@@ -19,6 +19,14 @@
 //-----------------------------
 namespace MiYALAB {
 namespace ROS2{
+/**
+ * @brief PointCloud save fuction using ascii
+ * 
+ * @param path save file path
+ * @param points save points
+ * @return true
+ * @return false
+ */
 bool savePointCloudAscii(const std::string &path, const sensor_msgs::msg::PointCloud &points)
 {
     // empty check

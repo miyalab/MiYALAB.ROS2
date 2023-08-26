@@ -17,12 +17,18 @@
 //-----------------------------
 namespace MiYALAB {
 namespace ROS2{
+/**
+ * @brief Convert Pose to Pose2D
+ * 
+ * @param pose 
+ * @return geometry_msgs::msg::Pose2D 
+ */
 inline geometry_msgs::msg::Pose2D toPose2D(const geometry_msgs::msg::Pose &pose)
 {
     geometry_msgs::msg::Pose2D ret;
     ret.x = pose.position.x;
     ret.y = pose.position.y;
-    ret.theta = MiYALAB::ROS2::(pose.orientation).z;
+    ret.theta = MiYALAB::ROS2::toRPY(pose.orientation).z;
     return ret;
 }
 }
