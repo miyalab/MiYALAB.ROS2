@@ -16,6 +16,12 @@
 //-----------------------------
 namespace MiYALAB {
 namespace ROS2{
+/**
+ * @brief Convert LaserScan to PointCloud 
+ * 
+ * @param laser 
+ * @return sensor_msgs::msg::PointCloud 
+ */
 inline sensor_msgs::msg::PointCloud toPointCloud(const sensor_msgs::msg::LaserScan &laser)
 {
     sensor_msgs::msg::PointCloud ret;

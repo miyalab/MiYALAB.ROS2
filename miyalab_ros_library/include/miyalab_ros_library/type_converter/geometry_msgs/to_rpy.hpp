@@ -16,6 +16,12 @@
 //-----------------------------
 namespace MiYALAB {
 namespace ROS2{
+/**
+ * @brief Convert Quaternion to Roll-Pitch-Yaw angle type
+ * 
+ * @param quaternion 
+ * @return geometry_msgs::msg::Vector3 
+ */
 inline geometry_msgs::msg::Vector3 toRPY(const geometry_msgs::msg::Quaternion &quaternion)
 {
     geometry_msgs::msg::Vector3 ret;

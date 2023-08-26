@@ -97,4 +97,5 @@
         "Odometry",
         "rclcpp"
     ],
+    "cmake.configureOnOpen": true,
 }
