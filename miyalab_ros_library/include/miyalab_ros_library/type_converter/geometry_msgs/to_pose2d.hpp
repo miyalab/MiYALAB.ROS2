@@ -31,6 +31,17 @@ static inline geometry_msgs::msg::Pose2D toPose2D(const geometry_msgs::msg::Pose
     ret.theta = MiYALAB::ROS2::toRPY(pose.orientation).z;
     return ret;
 }
+
+/**
+ * @brief Convert Pose to Pose2D
+ * 
+ * @param pose   input
+ * @param pose2d output
+ */
+static inline void toPose2D(const geometry_msgs::msg::Pose &pose, geometry_msgs::msg::Pose2D *pose2d)
+{
+    *pose2d = MiYALAB::ROS2::toPose2D(pose);
+}
 }
 }
 

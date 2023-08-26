@@ -40,6 +40,17 @@ static inline geometry_msgs::msg::Vector3 toRPY(const geometry_msgs::msg::Quater
     ret.z = std::atan2(2.0 * (q1q2 + q0q3), q0q0 + q1q1 - q2q2 - q3q3);
     return ret;
 }
+
+/**
+ * @brief Convert Quaternion to Roll-Pitch-Yaw angle type
+ * 
+ * @param quaternion input
+ * @param rpy        output
+ */
+static inline void toRPY(const geometry_msgs::msg::Quaternion &quaternion, geometry_msgs::msg::Vector3 *rpy)
+{
+    *rpy = MiYALAB::ROS2::toRPY(quaternion);
+}
 }
 }
 

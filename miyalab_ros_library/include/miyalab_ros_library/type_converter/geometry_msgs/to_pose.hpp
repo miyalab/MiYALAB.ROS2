@@ -35,6 +35,16 @@ static inline geometry_msgs::msg::Pose toPose(const geometry_msgs::msg::Pose2D &
     return ret;
 }
 
+/**
+ * @brief Convert Pose2D to Pose
+ * 
+ * @param pose2d input
+ * @param pose   output
+ */
+static inline void toPose(const geometry_msgs::msg::Pose2D &pose2d, geometry_msgs::msg::Pose *pose)
+{
+    *pose = MiYALAB::ROS2::toPose(pose2d);
+}
 }
 }
 

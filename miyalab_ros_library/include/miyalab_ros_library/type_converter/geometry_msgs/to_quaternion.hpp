@@ -37,6 +37,17 @@ static inline geometry_msgs::msg::Quaternion toQuaternion(const geometry_msgs::m
     ret.z = cr * cp * sy - sr * sp * cy;
     return ret;
 }
+
+/**
+ * @brief Convert Roll-Pitch-Yaw angle type To Quaternion
+ * 
+ * @param rpy        input
+ * @param quaternion output
+ */
+static inline void toQuaternion(const geometry_msgs::msg::Vector3 &rpy, geometry_msgs::msg::Quaternion *quaternion)
+{
+    *quaternion = MiYALAB::ROS2::toQuaternion(rpy);
+}
 }
 }
 
