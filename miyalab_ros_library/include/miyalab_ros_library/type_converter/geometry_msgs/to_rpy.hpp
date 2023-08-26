@@ -22,7 +22,7 @@ namespace ROS2{
  * @param quaternion 
  * @return geometry_msgs::msg::Vector3 
  */
-inline geometry_msgs::msg::Vector3 toRPY(const geometry_msgs::msg::Quaternion &quaternion)
+static inline geometry_msgs::msg::Vector3 toRPY(const geometry_msgs::msg::Quaternion &quaternion)
 {
     geometry_msgs::msg::Vector3 ret;
     const double q0q0 = quaternion.w * quaternion.w;

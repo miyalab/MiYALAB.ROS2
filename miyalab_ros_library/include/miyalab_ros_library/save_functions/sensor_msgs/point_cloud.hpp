@@ -23,7 +23,7 @@ namespace ROS2{
  * @return true
  * @return false
  */
-bool savePointCloudAscii(const std::string &path, const sensor_msgs::msg::PointCloud &points)
+static bool savePointCloudAscii(const std::string &path, const sensor_msgs::msg::PointCloud &points)
 {
     // empty check
     if(points.points.empty()) return false;

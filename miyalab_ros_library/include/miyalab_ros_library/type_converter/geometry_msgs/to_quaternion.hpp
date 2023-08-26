@@ -22,7 +22,7 @@ namespace ROS2{
  * @param rpy 
  * @return geometry_msgs::msg::Quaternion 
  */
-inline geometry_msgs::msg::Quaternion toQuaternion(const geometry_msgs::msg::Vector3 &rpy)
+static inline geometry_msgs::msg::Quaternion toQuaternion(const geometry_msgs::msg::Vector3 &rpy)
 {
     geometry_msgs::msg::Quaternion ret;
     const double cy = std::cos(rpy.z * 0.5);

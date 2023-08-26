@@ -10,6 +10,7 @@
 // ROS2
 #include <sensor_msgs/msg/point_cloud.hpp>
 #include <sensor_msgs/msg/laser_scan.hpp>
+#include <sensor_msgs/point_cloud_conversion.hpp>
 
 //-----------------------------
 // Functions
@@ -22,7 +23,7 @@ namespace ROS2{
  * @param laser 
  * @return sensor_msgs::msg::PointCloud 
  */
-inline sensor_msgs::msg::PointCloud toPointCloud(const sensor_msgs::msg::LaserScan &laser)
+static inline sensor_msgs::msg::PointCloud toPointCloud(const sensor_msgs::msg::LaserScan &laser)
 {
     sensor_msgs::msg::PointCloud ret;
     int points_size = laser.ranges.size();

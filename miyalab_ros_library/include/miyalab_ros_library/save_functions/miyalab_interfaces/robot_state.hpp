@@ -27,7 +27,7 @@ namespace ROS2{
  * @return true
  * @return false
  */
-bool saveRobotState(const std::string &path, const miyalab_interfaces::msg::RobotState &state)
+static bool saveRobotState(const std::string &path, const miyalab_interfaces::msg::RobotState &state)
 {
     // generate header
     if(!std::filesystem::is_regular_file(path)){

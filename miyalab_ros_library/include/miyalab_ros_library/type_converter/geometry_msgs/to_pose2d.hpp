@@ -23,7 +23,7 @@ namespace ROS2{
  * @param pose 
  * @return geometry_msgs::msg::Pose2D 
  */
-inline geometry_msgs::msg::Pose2D toPose2D(const geometry_msgs::msg::Pose &pose)
+static inline geometry_msgs::msg::Pose2D toPose2D(const geometry_msgs::msg::Pose &pose)
 {
     geometry_msgs::msg::Pose2D ret;
     ret.x = pose.position.x;
