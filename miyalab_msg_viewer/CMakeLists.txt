@@ -25,6 +25,7 @@ find_package(nav_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(OpenCV REQUIRED core highgui)
 find_package(cv_bridge REQUIRED)
+find_package(miyalab_ros_library REQUIRED)
 
 include_directories(
   include
@@ -46,6 +47,7 @@ ament_target_dependencies(${PROJECT_NAME}
   nav_msgs
   OpenCV
   cv_bridge
+  miyalab_ros_library
 )
 
 rclcpp_components_register_node(${PROJECT_NAME} PLUGIN "MiYALAB::ROS2::OdometryViewer" EXECUTABLE "odometry_msg_viewer_node")

@@ -42,7 +42,6 @@ private:
     rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr m_subscriber;
     void onMsgSubscribed(const nav_msgs::msg::Odometry::SharedPtr msg);
     
-    static geometry_msgs::msg::Vector3 toRPY(const geometry_msgs::msg::Quaternion &quaternion);
     std::unique_ptr<std::thread> m_thread;
     void run();
 };

@@ -10,7 +10,6 @@
 // ROS2
 #include <sensor_msgs/msg/point_cloud.hpp>
 #include <sensor_msgs/msg/laser_scan.hpp>
-#include <sensor_msgs/point_cloud_conversion.hpp>
 
 //-----------------------------
 // Functions
@@ -42,6 +41,8 @@ static inline sensor_msgs::msg::PointCloud toPointCloud(const sensor_msgs::msg::
         ret.channels[0].values[i] = laser.ranges[i];
         ret.channels[1].values[i] = laser.intensities[i];
     }
+
+    return ret;
 }
 }
 }

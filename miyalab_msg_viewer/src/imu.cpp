@@ -13,6 +13,7 @@
 #include <opencv2/opencv.hpp>
 
 #include "miyalab_msg_viewer/imu.hpp"
+#include "miyalab_ros_library/type_converter/geometry_msgs/to_rpy.hpp"
 
 //-----------------------------
 // namespace & using
@@ -71,28 +72,6 @@ void ImuViewer::onMsgSubscribed(const Imu::SharedPtr msg)
     m_mutex.unlock();
 }
 
-Vector3 ImuViewer::toRPY(const Quaternion &quaternion)
-{
-    geometry_msgs::msg::Vector3 ret;
-
-    const double q0q0 = quaternion.w * quaternion.w;
-	const double q1q1 = quaternion.x * quaternion.x;
-	const double q2q2 = quaternion.y * quaternion.y;
-	const double q3q3 = quaternion.z * quaternion.z;
-	const double q0q1 = quaternion.w * quaternion.x;
-	const double q0q2 = quaternion.w * quaternion.y;
-	const double q0q3 = quaternion.w * quaternion.z;
-	const double q1q2 = quaternion.x * quaternion.y;
-	const double q1q3 = quaternion.x * quaternion.z;
-	const double q2q3 = quaternion.y * quaternion.z;
-
-    ret.x = std::atan2(2.0 * (q2q3 + q0q1), q0q0 - q1q1 - q2q2 + q3q3);
-    ret.y = -std::asin(2.0 * (q1q3 - q0q2));
-    ret.z = std::atan2(2.0 * (q1q2 + q0q3), q0q0 + q1q1 - q2q2 - q3q3);
-
-    return ret;
-}
-
 /**
  * @brief Execute method
  * 
@@ -131,7 +110,7 @@ RCLCPP_INFO_STREAM(this->get_logger(), this->get_name() << " has started. thread
             imu_ptr->orientation.y,
             imu_ptr->orientation.z
         );
-        auto imu_ptr_orientation = this->toRPY(imu_ptr->orientation);
+        auto imu_ptr_orientation = MiYALAB::ROS2::toRPY(imu_ptr->orientation);
         RCLCPP_INFO(this->get_logger(), "Orient(Euler): x=%.3f, y=%.3f, z=%.3f",
             imu_ptr_orientation.x,
             imu_ptr_orientation.y,

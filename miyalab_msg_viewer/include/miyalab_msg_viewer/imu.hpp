@@ -45,7 +45,6 @@ private:
     rclcpp::Subscription<sensor_msgs::msg::Imu>::SharedPtr m_subscriber;
     void onMsgSubscribed(const sensor_msgs::msg::Imu::SharedPtr msg);
 
-    static geometry_msgs::msg::Vector3 toRPY(const geometry_msgs::msg::Quaternion &quaternion);
     std::unique_ptr<std::thread> m_thread;
     void run();
 };

@@ -10,6 +10,7 @@
 #include <rclcpp/rclcpp.hpp>
 
 #include "miyalab_msg_viewer/odometry.hpp"
+#include "miyalab_ros_library/type_converter/geometry_msgs/to_rpy.hpp"
 
 //-----------------------------
 // namespace & using
@@ -72,29 +73,6 @@ void OdometryViewer::onMsgSubscribed(const Odometry::SharedPtr msg)
     m_mutex.unlock();
 }
 
-Vector3 OdometryViewer::toRPY(const Quaternion &quaternion)
-{
-    geometry_msgs::msg::Vector3 ret;
-
-    const double q0q0 = quaternion.w * quaternion.w;
-    const double q1q1 = quaternion.x * quaternion.x;
-    const double q2q2 = quaternion.y * quaternion.y;
-    const double q3q3 = quaternion.z * quaternion.z;
-    const double q0q1 = quaternion.w * quaternion.x;
-    const double q0q2 = quaternion.w * quaternion.y;
-    const double q0q3 = quaternion.w * quaternion.z;
-    const double q1q2 = quaternion.x * quaternion.y;
-    const double q1q3 = quaternion.x * quaternion.z;
-    const double q2q3 = quaternion.y * quaternion.z;
-
-    ret.x = std::atan2(2.0 * (q2q3 + q0q1), q0q0 - q1q1 - q2q2 + q3q3);
-    ret.y = -std::asin(2.0 * (q1q3 - q0q2));
-    ret.z = std::atan2(2.0 * (q1q2 + q0q3), q0q0 + q1q1 - q2q2 - q3q3);
-
-    return ret;
-}
-
-
 /**
  * @brief Execute method
  * 
@@ -131,7 +109,7 @@ void OdometryViewer::run()
             odom_ptr->pose.pose.orientation.y,
             odom_ptr->pose.pose.orientation.z
         );
-        auto odom_ptr_pose_pose_orientation = this->toRPY(odom_ptr->pose.pose.orientation);
+        auto odom_ptr_pose_pose_orientation = MiYALAB::ROS2::toRPY(odom_ptr->pose.pose.orientation);
         RCLCPP_INFO(this->get_logger(), "Orient(Euler): x=%.3f, y=%.3f, z=%.3f",
             odom_ptr_pose_pose_orientation.x,
             odom_ptr_pose_pose_orientation.y,

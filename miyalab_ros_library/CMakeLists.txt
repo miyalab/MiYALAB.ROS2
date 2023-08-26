@@ -34,7 +34,15 @@ ament_target_dependencies(${PROJECT_NAME}
   sensor_msgs
 )
 
+ament_export_libraries(${PROJECT_NAME})
+ament_export_include_directories(include)
+install(DIRECTORY include/ DESTINATION include)
+install(TARGETS ${PROJECT_NAME} 
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION bin
+  INCLUDES DESTINATION include
+)
 install(TARGETS ${PROJECT_NAME} DESTINATION lib)
 
-install(DIRECTORY include/ DESTINATION include/${PROJECT_NAME})
 ament_package()
