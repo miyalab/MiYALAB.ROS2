@@ -123,35 +123,41 @@ void ManualRobotController2D::run()
         // active状態
         m_is_active_mutex.lock();
         is_active_msg.data = m_is_active;
+        m_is_active_mutex.unlock();
 
-        // キー入力によるアクティブ状態変更
+        // joystickデータ受信 かつ データが存在
         if(joy_ptr.get() && !joy_ptr->buttons.empty()){
+            // アクティブ状態変更
             is_active_msg.data = is_active_msg.data ||  joy_ptr->buttons[m_active_button_num];
             is_active_msg.data = is_active_msg.data && !joy_ptr->buttons[m_inactive_button_num];
+
+            // アクティブ時のみ処理
+            if(is_active_msg.data){
+                // 直進方向速度ゲイン
+                double linear_gain = this->m_linear_gain;
+                double angular_gain = this->m_angular_gain;
+                if(joy_ptr->axes[this->m_slow_trigger_num] > 0.0){
+                    linear_gain /= 2;
+                    angular_gain /= 2;
+                }
+                if(joy_ptr->axes[this->m_fast_trigger_num] > 0.0){
+                    linear_gain *= 2;
+                    angular_gain *= 2;
+                }
+                Twist robot_vel_msg;
+                robot_vel_msg.linear.x  = linear_gain * joy_ptr->axes[this->m_linear_x_joy_num];
+                robot_vel_msg.linear.y  = linear_gain * joy_ptr->axes[this->m_linear_y_joy_num];
+                robot_vel_msg.angular.z = angular_gain * joy_ptr->axes[this->m_angular_z_joy_num];
+                m_robot_vel_publisher->publish(robot_vel_msg);
+            }
         }
-        m_is_active_publisher->publish(is_active_msg);
+
+        m_is_active_mutex.lock();
         m_is_active = is_active_msg.data;
         m_is_active_mutex.unlock();
-        
-        // active時のみ処理
-        if(is_active_msg.data){
-            // 直進方向速度ゲイン
-            double linear_gain = this->m_linear_gain;
-            double angular_gain = this->m_angular_gain;
-            if(joy_ptr->axes[this->m_slow_trigger_num] > 0.0){
-                linear_gain /= 2;
-                angular_gain /= 2;
-            }
-            if(joy_ptr->axes[this->m_fast_trigger_num] > 0.0){
-                linear_gain *= 2;
-                angular_gain *= 2;
-            }
-            Twist robot_vel_msg;
-            robot_vel_msg.linear.x  = linear_gain * joy_ptr->axes[this->m_linear_x_joy_num];
-            robot_vel_msg.linear.y  = linear_gain * joy_ptr->axes[this->m_linear_y_joy_num];
-            robot_vel_msg.angular.z = angular_gain * joy_ptr->axes[this->m_angular_z_joy_num];
-            m_robot_vel_publisher->publish(robot_vel_msg);
-        }
+
+        // アクティブ状態
+        m_is_active_publisher->publish(is_active_msg);
     }
 
     RCLCPP_INFO(this->get_logger(), "%s has stoped.", this->get_name());
