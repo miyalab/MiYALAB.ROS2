@@ -5,7 +5,6 @@
 #include <memory>
 #include <thread>
 #include <functional>
-#include <filesystem>
 
 // ROS2
 #include <rclcpp/rclcpp.hpp>
@@ -69,27 +68,29 @@ void Camera::run()
     RCLCPP_INFO_STREAM(this->get_logger(), this->get_name() << " has started. thread id = " << std::this_thread::get_id());
 
     cv::VideoCapture capture(m_param.device);
+    if(capture.isOpened() == false){
+        RCLCPP_ERROR(this->get_logger(), "%s device not open");
+        return;
+    }
     capture.set(cv::CAP_PROP_FRAME_HEIGHT, m_param.frame_height);
     capture.set(cv::CAP_PROP_FRAME_WIDTH, m_param.frame_width);
     capture.set(cv::CAP_PROP_FPS, m_param.fps);
-    capture.set(cv::CAP_PROP_FOURCC, cv::VideoWriter::fourcc(m_param.format[0], m_param.format[1], m_param.format[2], m_param.format[3]));
+    if(m_param.format.size() > 4){
+        capture.set(cv::CAP_PROP_FOURCC, cv::VideoWriter::fourcc(m_param.format[0], m_param.format[1], m_param.format[2], m_param.format[3]));
+    }
     
     // Main loop
     for(rclcpp::WallRate loop(m_param.fps); rclcpp::ok(); loop.sleep()){
         auto img_msg = std::make_unique<sensor_msgs::msg::Image>();
         cv_bridge::CvImage cv_img;
 
-        // capture >> cv_img.image;
-        capture.read(cv_img.image);
+        capture >> cv_img.image;
         cv_img.header.frame_id = m_param.device;
         cv_img.header.stamp = this->now();
         cv_img.encoding = "bgr8";
 
         cv_img.toImageMsg(*img_msg);
         m_image_publisher->publish(std::move(img_msg));
-
-        cv::imshow("frame", cv_img.image);
-        if(cv::waitKey(1) == 'q') break;
     }
 
     // カメラ開放
