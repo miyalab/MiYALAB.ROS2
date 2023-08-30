@@ -7,7 +7,7 @@ from launch import LaunchDescription
 from launch_ros.actions import Node
 
 def generate_launch_description():
-    pkg_prefix = get_package_share_directory('miyalab_msg_viewer')
+    pkg_prefix = get_package_share_directory('miyalab_camera')
    
     container = Node(
 	    package='rclcpp_components',

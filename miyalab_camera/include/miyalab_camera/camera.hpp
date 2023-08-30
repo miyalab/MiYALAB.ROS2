@@ -38,9 +38,17 @@ private:
     // joystick関連
     rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr m_image_publisher;
 
+    // パラメータ
+    struct Param{
+        std::string device;
+        std::string format;
+        int frame_width;
+        int frame_height;
+        int fps;
+    } m_param;
+
     // 処理用
     int m_rate = -1;
-
     std::unique_ptr<std::thread> m_thread;
     void run();
 };
