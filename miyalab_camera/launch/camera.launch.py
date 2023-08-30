@@ -12,21 +12,21 @@ def generate_launch_description():
     container = Node(
 	    package='rclcpp_components',
 		executable='component_container',
-		name = 'viewer_container',
+		name = 'camera_container',
 		emulate_tty = True,
 		output = 'screen'
 	)
 
     components = LoadComposableNodes(
-        target_container="viewer_container",
+        target_container="camera_container",
         composable_node_descriptions=[
             ComposableNode(
-                package='miyalab_msg_viewer',
-                plugin='MiYALAB::ROS2::ImageViewer',
-                name='viewer',
+                package='miyalab_camera',
+                plugin='MiYALAB::ROS2::Camera',
+                name='camera',
                 remappings=[
-                    # subscriber
-                    ("/camera/image", "/camera/image"),
+                    # publisher
+                    ("~/image", "~/image"),
                 ],
                 extra_arguments=[{'use_intra_process_comms': True}]
             )

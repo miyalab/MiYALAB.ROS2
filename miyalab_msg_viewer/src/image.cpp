@@ -87,6 +87,7 @@ void ImageViewer::run()
         if(image_ptr->data.empty()) continue;
 
         RCLCPP_INFO(this->get_logger(), "---");
+        RCLCPP_INFO(this->get_logger(), "frame_id: %s", image_ptr->header.frame_id.c_str());
         RCLCPP_INFO(this->get_logger(), "stamp: %d.%09d", image_ptr->header.stamp.sec, image_ptr->header.stamp.nanosec);
         RCLCPP_INFO(this->get_logger(), "encoding: %s", image_ptr->encoding.c_str());
         cv::imshow("frame", cv_bridge::toCvShare(image_ptr, image_ptr->encoding)->image);

@@ -1,0 +1,6 @@
+camera:
+  device: "/dev/video0"
+  fps: 30
+  height: 1280
+  width: 720
+  
