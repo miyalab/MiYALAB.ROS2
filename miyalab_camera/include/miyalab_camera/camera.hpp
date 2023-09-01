@@ -45,6 +45,7 @@ private:
         int frame_width;
         int frame_height;
         int fps;
+        int rotate_flag; // -1: left, 0: none, 1:right
     } m_param;
 
     // 処理用

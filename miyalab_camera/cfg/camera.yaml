@@ -1,9 +1,12 @@
 /camera:
   ros__parameters:
     camera:
-      device: /dev/video2
+      device: "/dev/video0"
       format: "MPEG"
       fps: 30
       frame:
-        height: 1280
-        width: 720
+        width: 1280
+        height: 720
+      rotate:
+        left: true
+        right: false

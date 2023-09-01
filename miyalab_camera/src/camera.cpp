@@ -38,6 +38,8 @@ Camera::Camera(rclcpp::NodeOptions options) : rclcpp::Node("camera", options)
     m_param.frame_width  = this->declare_parameter("camera.frame.width", 1280);
     m_param.frame_height = this->declare_parameter("camera.frame.height", 720);
     m_param.fps          = this->declare_parameter("camera.fps", 30);
+    m_param.rotate_flag  = this->declare_parameter("camera.rotate.right", false) 
+                         - this->declare_parameter("camera.rotate.left", false);
     RCLCPP_INFO(this->get_logger(), "Complete! Parameters were initialized.");
 
     // Initialize publisher
@@ -89,6 +91,13 @@ void Camera::run()
         cv_img.header.frame_id = m_param.device;
         cv_img.header.stamp = this->now();
         cv_img.encoding = "bgr8";
+
+        if(m_param.rotate_flag != 0){
+            // cv::Mat r_mat = cv::getRotationMatrix2D(cv::Point2f(cv_img.image.cols/2, cv_img.image.rows/2), 90, 1);
+            // cv::warpAffine(cv_img.image, cv_img.image, r_mat, cv::Size(cv_img.image.rows, cv_img.image.cols));
+            cv::rotate(cv_img.image, cv_img.image, cv::ROTATE_90_COUNTERCLOCKWISE);
+            if(m_param.rotate_flag > 0) cv::flip(cv_img.image, cv_img.image, -1);
+        }
 
         cv_img.toImageMsg(*img_msg);
         m_image_publisher->publish(std::move(img_msg));
