@@ -1,5 +1,6 @@
 camera:
-  device: "/dev/video0"
+  device: "/dev/video4"
+  format: "MPEG"
   fps: 30
   frame:
     height: 1280

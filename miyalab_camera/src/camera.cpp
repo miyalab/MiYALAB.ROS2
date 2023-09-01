@@ -69,9 +69,10 @@ void Camera::run()
 
     cv::VideoCapture capture(m_param.device);
     if(capture.isOpened() == false){
-        RCLCPP_ERROR(this->get_logger(), "%s device not open");
+        RCLCPP_ERROR(this->get_logger(), "%s device not open", m_param.device.c_str());
         return;
     }
+    else RCLCPP_INFO(this->get_logger(), "%s device open", m_param.device.c_str());
     capture.set(cv::CAP_PROP_FRAME_HEIGHT, m_param.frame_height);
     capture.set(cv::CAP_PROP_FRAME_WIDTH, m_param.frame_width);
     capture.set(cv::CAP_PROP_FPS, m_param.fps);

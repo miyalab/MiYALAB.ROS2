@@ -24,6 +24,7 @@ def generate_launch_description():
                 package='miyalab_camera',
                 plugin='MiYALAB::ROS2::Camera',
                 name='camera',
+                parameters=[join(pkg_prefix, "cfg/camera.yaml")],
                 remappings=[
                     # publisher
                     ("~/image", "~/image"),
