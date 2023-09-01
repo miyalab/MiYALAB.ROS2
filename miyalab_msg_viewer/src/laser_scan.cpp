@@ -118,7 +118,7 @@ void LaserScanViewer::run()
             frame.at<cv::Vec3b>(y,x) = this->m_point_color;
         }
 
-        cv::imshow("frame", frame);
+        cv::imshow(m_subscriber->get_topic_name(), frame);
         cv::waitKey(1);
     }
 

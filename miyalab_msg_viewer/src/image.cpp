@@ -91,6 +91,7 @@ void ImageViewer::run()
         RCLCPP_INFO(this->get_logger(), "frame_id: %s", image_ptr->header.frame_id.c_str());
         RCLCPP_INFO(this->get_logger(), "stamp: %d.%09d", image_ptr->header.stamp.sec, image_ptr->header.stamp.nanosec);
         RCLCPP_INFO(this->get_logger(), "encoding: %s", image_ptr->encoding.c_str());
+        RCLCPP_INFO(this->get_logger(), "Size(H:W): %d, %d", image_ptr->height, image_ptr->width);
         cv::imshow(m_subscriber->get_topic_name(), cv_bridge::toCvShare(image_ptr, image_ptr->encoding)->image);
         cv::waitKey(1);
     }

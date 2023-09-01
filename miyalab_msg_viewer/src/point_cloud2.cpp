@@ -121,7 +121,7 @@ void PointCloud2Viewer::run()
             RCLCPP_INFO(this->get_logger(), "count   : %d", points_ptr->fields[i].count);
         }
 
-        cv::imshow("frame", frame);
+        cv::imshow(m_subscriber->get_topic_name(), frame);
         cv::waitKey(1);
     }
 
