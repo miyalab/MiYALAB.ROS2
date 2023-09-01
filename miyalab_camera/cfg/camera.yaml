@@ -1,8 +1,9 @@
-camera:
-  device: "/dev/video4"
-  format: "MPEG"
-  fps: 30
-  frame:
-    height: 1280
-    width: 720
-  
+/camera:
+  ros__parameters:
+    camera:
+      device: /dev/video2
+      format: "MPEG"
+      fps: 30
+      frame:
+        height: 1280
+        width: 720
