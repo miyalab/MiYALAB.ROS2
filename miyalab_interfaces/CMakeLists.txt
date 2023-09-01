@@ -29,6 +29,7 @@ set(msg_files
   msg/RobotState.msg
   msg/Obstacle.msg
   msg/ObstacleArray.msg
+  msg/Vector3DArray.msg
 )
 set(srv_files
   srv/SetInt32.srv
