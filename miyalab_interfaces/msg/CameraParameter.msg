@@ -1,4 +1,5 @@
+string device
 string codec
-geometry_msgs/Vector3 image_size            # x: null, y: width, z: height
-geometry_msgs/Vector3 camera_angle_of_view  # x: null, y: vertical, z: horizontal
+geometry_msgs/Vector3 image_size     # x: width, y: height, z: null
+geometry_msgs/Vector3 angle_of_view  # x: horizontal, y: virtical, z: null
 float32 fps

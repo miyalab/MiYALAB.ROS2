@@ -12,6 +12,8 @@
 // ROS2
 #include <rclcpp/rclcpp.hpp>
 #include <sensor_msgs/msg/image.hpp>
+#include <miyalab_interfaces/msg/camera_parameter.hpp>
+#include <miyalab_interfaces/srv/get_camera_parameter.hpp>
 
 //-----------------------------
 // Namespace & using
@@ -35,16 +37,18 @@ public:
     Camera(rclcpp::NodeOptions options = rclcpp::NodeOptions());
     ~Camera();
 private:
-    // joystick関連
+    // Image関連
     rclcpp::Publisher<sensor_msgs::msg::Image>::SharedPtr m_image_publisher;
+
+    // カメラパラメータ関連
+    rclcpp::Service<miyalab_interfaces::srv::GetCameraParameter>::SharedPtr m_get_camera_parameter_service;
+    void serviceGetCameraParameter(const std::shared_ptr<rmw_request_id_t> header, 
+                            const miyalab_interfaces::srv::GetCameraParameter::Request::SharedPtr request,
+                            const miyalab_interfaces::srv::GetCameraParameter::Response::SharedPtr response);
 
     // パラメータ
     struct Param{
-        std::string device;
-        std::string format;
-        int frame_width;
-        int frame_height;
-        int fps;
+        miyalab_interfaces::msg::CameraParameter camera_info;
         int rotate_flag; // -1: left, 0: none, 1:right
     } m_param;
 

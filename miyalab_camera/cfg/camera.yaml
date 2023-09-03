@@ -1,12 +1,13 @@
-/camera:
-  ros__parameters:
-    camera:
-      device: "/dev/video0"
-      format: "MPEG"
-      fps: 30
-      frame:
-        width: 1280
-        height: 720
-      rotate:
-        left: true
-        right: false
+camera:
+  device: "/dev/video0"
+  codec: "MPEG"
+  fps: 30
+  frame:
+    width : 1280
+    height: 720
+  angle_of_view:
+    horizontal: 74.0
+    vertical  : 42.0
+  rotate:
+    left: true
+    right: false
