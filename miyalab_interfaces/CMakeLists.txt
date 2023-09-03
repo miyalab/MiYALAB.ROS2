@@ -40,6 +40,7 @@ set(srv_files
   srv/SetString.srv
   srv/SetPose.srv
   srv/ResetRobotState.srv
+  srv/GetCameraParameter.srv
 )
 rosidl_generate_interfaces(${PROJECT_NAME}
   ${msg_files}
