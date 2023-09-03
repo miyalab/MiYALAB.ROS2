@@ -9,5 +9,5 @@ camera:
     horizontal: 74.0
     vertical  : 42.0
   rotate:
-    left: true
+    left: false
     right: false
