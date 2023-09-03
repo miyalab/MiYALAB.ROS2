@@ -24,6 +24,7 @@ find_package(sensor_msgs REQUIRED)
 find_package(nav_msgs REQUIRED)
 
 set(msg_files
+  msg/CameraParameter.msg
   msg/Polar.msg
   msg/PointCloudPolar.msg
   msg/RobotState.msg
