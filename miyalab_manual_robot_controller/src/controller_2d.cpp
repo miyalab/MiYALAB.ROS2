@@ -92,8 +92,8 @@ void ManualRobotController2D::setJoyState(const Joy::SharedPtr joy)
 }
 
 void ManualRobotController2D::serviceSetActive(const std::shared_ptr<rmw_request_id_t> header, 
-                            const std_srvs::srv::SetBool::Request::SharedPtr request,
-                            const std_srvs::srv::SetBool::Response::SharedPtr response)
+                            const SetBool::Request::SharedPtr request,
+                            const SetBool::Response::SharedPtr response)
 {
     m_is_active_mutex.lock();
     m_is_active = request->data;
