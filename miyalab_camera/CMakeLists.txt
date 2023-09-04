@@ -23,6 +23,7 @@ find_package(sensor_msgs REQUIRED)
 find_package(OpenCV REQUIRED core highgui videoio)
 find_package(cv_bridge REQUIRED)
 find_package(miyalab_interfaces REQUIRED)
+find_package(miyalab_ros_library REQUIRED)
 
 include_directories(
   include
@@ -38,6 +39,7 @@ ament_target_dependencies(${PROJECT_NAME}
   OpenCV
   cv_bridge
   miyalab_interfaces
+  miyalab_ros_library
 )
 rclcpp_components_register_node(${PROJECT_NAME} PLUGIN "MiYALAB::ROS2::Camera" EXECUTABLE camera_node)
 

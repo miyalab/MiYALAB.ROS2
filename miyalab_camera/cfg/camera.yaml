@@ -8,6 +8,14 @@ camera:
   angle_of_view:
     horizontal: 74.0
     vertical  : 42.0
+  offset:
+    position:
+      x: 0.0
+      y: 0.0
+      z: 0.0
+    orientation:
+      pitch: 0.0
+      yaw  : 0.0
   rotate:
     left: false
     right: false
