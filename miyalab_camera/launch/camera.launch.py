@@ -30,7 +30,7 @@ def generate_launch_description():
                     ("~/image", "~/image"),
 
                     # service
-                    ("~/get_camera_parameter, ~/get_camera_parameter"),
+                    ("~/get_camera_parameter", "~/get_camera_parameter"),
                 ],
                 extra_arguments=[{'use_intra_process_comms': True}]
             )
