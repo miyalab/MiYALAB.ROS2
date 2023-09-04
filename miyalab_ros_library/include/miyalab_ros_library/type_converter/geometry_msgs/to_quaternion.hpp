@@ -51,7 +51,6 @@ static inline geometry_msgs::msg::Quaternion toQuaternion(const geometry_msgs::m
     return MiYALAB::ROS2::toQuaternion(rpy.x, rpy.y, rpy.z);
 }
 
-
 /**
  * @brief Convert Roll-Pitch-Yaw angle type To Quaternion
  * 
