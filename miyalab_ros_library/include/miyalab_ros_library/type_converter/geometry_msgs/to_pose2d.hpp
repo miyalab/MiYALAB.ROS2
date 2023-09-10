@@ -25,7 +25,7 @@ namespace ROS2{
  */
 static inline void toPose2D(const geometry_msgs::msg::Pose &pose, geometry_msgs::msg::Pose2D *pose2d)
 {
-    pose2d->.x = pose.position.x;
+    pose2d->x = pose.position.x;
     pose2d->y = pose.position.y;
     pose2d->theta = MiYALAB::ROS2::toRPY(pose.orientation).z;
 }
