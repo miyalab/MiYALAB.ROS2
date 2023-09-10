@@ -19,6 +19,28 @@ namespace ROS2{
 /**
  * @brief Convert Roll-Pitch-Yaw angle type To Quaternion
  * 
+ * @param roll          input
+ * @param pitch         input
+ * @param yaw           input
+ * @param quaternion    output
+ */
+static inline void toQuaternion(const double &roll, const double &pitch, const double &yaw, geometry_msgs::msg::Quaternion *quaternion)
+{
+    const double cy = std::cos(yaw * 0.5);
+    const double sy = std::sin(yaw * 0.5);
+    const double cp = std::cos(pitch * 0.5);
+    const double sp = std::sin(pitch * 0.5);
+    const double cr = std::cos(roll * 0.5);
+    const double sr = std::sin(roll * 0.5);
+    quaternion->w = cr * cp * cy + sr * sp * sy;
+    quaternion->x = sr * cp * cy - cr * sp * sy;
+    quaternion->y = cr * sp * cy + sr * cp * sy;
+    quaternion->z = cr * cp * sy - sr * sp * cy;
+}
+
+/**
+ * @brief Convert Roll-Pitch-Yaw angle type To Quaternion
+ * 
  * @param roll 
  * @param pitch 
  * @param yaw 
@@ -27,17 +49,19 @@ namespace ROS2{
 static inline geometry_msgs::msg::Quaternion toQuaternion(const double &roll, const double &pitch, const double &yaw)
 {
     geometry_msgs::msg::Quaternion ret;
-    const double cy = std::cos(yaw * 0.5);
-    const double sy = std::sin(yaw * 0.5);
-    const double cp = std::cos(pitch * 0.5);
-    const double sp = std::sin(pitch * 0.5);
-    const double cr = std::cos(roll * 0.5);
-    const double sr = std::sin(roll * 0.5);
-    ret.w = cr * cp * cy + sr * sp * sy;
-    ret.x = sr * cp * cy - cr * sp * sy;
-    ret.y = cr * sp * cy + sr * cp * sy;
-    ret.z = cr * cp * sy - sr * sp * cy;
+    MiYALAB::ROS2::toQuaternion(roll, pitch, yaw, &ret);
     return ret;
+}
+
+/**
+ * @brief Convert Roll-Pitch-Yaw angle type To Quaternion
+ * 
+ * @param rpy        input
+ * @param quaternion output
+ */
+static inline void toQuaternion(const geometry_msgs::msg::Vector3 &rpy, geometry_msgs::msg::Quaternion *quaternion)
+{
+    MiYALAB::ROS2::toQuaternion(rpy.x, rpy.y, rpy.z, quaternion);
 }
 
 /**
@@ -51,29 +75,7 @@ static inline geometry_msgs::msg::Quaternion toQuaternion(const geometry_msgs::m
     return MiYALAB::ROS2::toQuaternion(rpy.x, rpy.y, rpy.z);
 }
 
-/**
- * @brief Convert Roll-Pitch-Yaw angle type To Quaternion
- * 
- * @param roll          input
- * @param pitch         input
- * @param yaw           input
- * @param quaternion    output
- */
-static inline void toQuaternion(const double &roll, const double &pitch, const double &yaw, geometry_msgs::msg::Quaternion *quaternion)
-{
-    *quaternion = MiYALAB::ROS2::toQuaternion(roll, pitch, yaw);
-}
 
-/**
- * @brief Convert Roll-Pitch-Yaw angle type To Quaternion
- * 
- * @param rpy        input
- * @param quaternion output
- */
-static inline void toQuaternion(const geometry_msgs::msg::Vector3 &rpy, geometry_msgs::msg::Quaternion *quaternion)
-{
-    *quaternion = MiYALAB::ROS2::toQuaternion(rpy);
-}
 }
 }
 

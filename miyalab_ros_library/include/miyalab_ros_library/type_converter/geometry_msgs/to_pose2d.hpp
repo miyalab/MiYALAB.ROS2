@@ -20,27 +20,27 @@ namespace ROS2{
 /**
  * @brief Convert Pose to Pose2D
  * 
+ * @param pose   input
+ * @param pose2d output
+ */
+static inline void toPose2D(const geometry_msgs::msg::Pose &pose, geometry_msgs::msg::Pose2D *pose2d)
+{
+    pose2d->.x = pose.position.x;
+    pose2d->y = pose.position.y;
+    pose2d->theta = MiYALAB::ROS2::toRPY(pose.orientation).z;
+}
+
+/**
+ * @brief Convert Pose to Pose2D
+ * 
  * @param pose 
  * @return geometry_msgs::msg::Pose2D 
  */
 static inline geometry_msgs::msg::Pose2D toPose2D(const geometry_msgs::msg::Pose &pose)
 {
     geometry_msgs::msg::Pose2D ret;
-    ret.x = pose.position.x;
-    ret.y = pose.position.y;
-    ret.theta = MiYALAB::ROS2::toRPY(pose.orientation).z;
+    MiYALAB::ROS2::toPose2D(pose, &ret);
     return ret;
-}
-
-/**
- * @brief Convert Pose to Pose2D
- * 
- * @param pose   input
- * @param pose2d output
- */
-static inline void toPose2D(const geometry_msgs::msg::Pose &pose, geometry_msgs::msg::Pose2D *pose2d)
-{
-    *pose2d = MiYALAB::ROS2::toPose2D(pose);
 }
 }
 }

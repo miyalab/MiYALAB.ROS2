@@ -19,12 +19,11 @@ namespace ROS2{
 /**
  * @brief Convert Quaternion to Roll-Pitch-Yaw angle type
  * 
- * @param quaternion 
- * @return geometry_msgs::msg::Vector3 
+ * @param quaternion input
+ * @param rpy        output
  */
-static inline geometry_msgs::msg::Vector3 toRPY(const geometry_msgs::msg::Quaternion &quaternion)
+static inline void toRPY(const geometry_msgs::msg::Quaternion &quaternion, geometry_msgs::msg::Vector3 *rpy)
 {
-    geometry_msgs::msg::Vector3 ret;
     const double q0q0 = quaternion.w * quaternion.w;
     const double q1q1 = quaternion.x * quaternion.x;
     const double q2q2 = quaternion.y * quaternion.y;
@@ -35,21 +34,22 @@ static inline geometry_msgs::msg::Vector3 toRPY(const geometry_msgs::msg::Quater
     const double q1q2 = quaternion.x * quaternion.y;
     const double q1q3 = quaternion.x * quaternion.z;
     const double q2q3 = quaternion.y * quaternion.z;
-    ret.x = std::atan2(2.0 * (q2q3 + q0q1), q0q0 - q1q1 - q2q2 + q3q3);
-    ret.y = -std::asin(2.0 * (q1q3 - q0q2));
-    ret.z = std::atan2(2.0 * (q1q2 + q0q3), q0q0 + q1q1 - q2q2 - q3q3);
-    return ret;
+    rpy->x = std::atan2(2.0 * (q2q3 + q0q1), q0q0 - q1q1 - q2q2 + q3q3);
+    rpy->y = -std::asin(2.0 * (q1q3 - q0q2));
+    rpy->z = std::atan2(2.0 * (q1q2 + q0q3), q0q0 + q1q1 - q2q2 - q3q3);
 }
 
 /**
  * @brief Convert Quaternion to Roll-Pitch-Yaw angle type
  * 
- * @param quaternion input
- * @param rpy        output
+ * @param quaternion 
+ * @return geometry_msgs::msg::Vector3 
  */
-static inline void toRPY(const geometry_msgs::msg::Quaternion &quaternion, geometry_msgs::msg::Vector3 *rpy)
+static inline geometry_msgs::msg::Vector3 toRPY(const geometry_msgs::msg::Quaternion &quaternion)
 {
-    *rpy = MiYALAB::ROS2::toRPY(quaternion);
+    geometry_msgs::msg::Vector3 ret;
+    MiYALAB::ROS2::toRPY(quaternion, &ret);
+    return ret;
 }
 }
 }

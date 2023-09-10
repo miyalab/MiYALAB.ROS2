@@ -19,31 +19,31 @@ namespace ROS2{
 /**
  * @brief Convert Pose2D to Pose
  * 
+ * @param pose2d input
+ * @param pose   output
+ */
+static inline void toPose(const geometry_msgs::msg::Pose2D &pose2d, geometry_msgs::msg::Pose *pose)
+{
+    pose->position.x = pose2d.x;
+    pose->position.y = pose2d.y;
+    pose->position.z = 0;
+    pose->orientation.w = std::cos(0.5 * pose2d.theta);
+    pose->orientation.x = 0;
+    pose->orientation.y = 0;
+    pose->orientation.z = std::sin(0.5 * pose2d.theta);
+}
+
+/**
+ * @brief Convert Pose2D to Pose
+ * 
  * @param pose2d 
  * @return geometry_msgs::msg::Pose 
  */
 static inline geometry_msgs::msg::Pose toPose(const geometry_msgs::msg::Pose2D &pose2d)
 {
     geometry_msgs::msg::Pose ret;
-    ret.position.x = pose2d.x;
-    ret.position.y = pose2d.y;
-    ret.position.z = 0;
-    ret.orientation.w = std::cos(0.5 * pose2d.theta);
-    ret.orientation.x = 0;
-    ret.orientation.y = 0;
-    ret.orientation.z = std::sin(0.5 * pose2d.theta);
+    MiYALAB::ROS2::toPose(pose2d, &ret);
     return ret;
-}
-
-/**
- * @brief Convert Pose2D to Pose
- * 
- * @param pose2d input
- * @param pose   output
- */
-static inline void toPose(const geometry_msgs::msg::Pose2D &pose2d, geometry_msgs::msg::Pose *pose)
-{
-    *pose = MiYALAB::ROS2::toPose(pose2d);
 }
 }
 }
