@@ -34,7 +34,7 @@ static inline bool savePoseStamped(const std::string &path, const geometry_msgs:
     }
 
     geometry_msgs::msg::Vector3 pose_pose_orientation;
-    MiYALAB::ROS2::toRPY(&pose.pose.orientation);
+    MiYALAB::ROS2::toRPY(pose.pose.orientation, &pose_pose_orientation);
     char pose_header_stamp_nanosec[16];
     std::snprintf(pose_header_stamp_nanosec, 16, "%09d", pose.header.stamp.nanosec);
     std::ofstream ofs(path, std::ios::app);

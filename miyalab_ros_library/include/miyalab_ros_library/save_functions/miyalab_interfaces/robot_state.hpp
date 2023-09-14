@@ -76,6 +76,8 @@ static bool saveRobotState(const std::string &path, const miyalab_interfaces::ms
     }
     ofs << std::endl;
     ofs.close();
+
+    return true;
 }
 }
 }

@@ -1,6 +1,7 @@
 std_msgs/Header     header
 float64             battery         # バッテリー電圧
-float64             distance        # 移動距離
+float64             distance        # 総移動距離
+float64             rotation        # 総旋回量
 float64             temperature     # ロボット内部温度
 float64             cpu_temperature # CPU温度
 int32[]             encoder         # ロータリーエンコーダパルス計数値
