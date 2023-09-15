@@ -145,7 +145,7 @@ void Camera::run()
         capture >> cv_img.image;
         cv_img.header.frame_id = m_param.camera_info.device;
         cv_img.header.stamp = this->now();
-        cv_img.encoding = "bgr8";
+        cv_img.encoding = sensor_msgs::image_encodings::BGR8;
 
         // image rotation
         if(m_param.rotate_flag < 0)      cv::rotate(cv_img.image, cv_img.image, cv::ROTATE_90_COUNTERCLOCKWISE);
