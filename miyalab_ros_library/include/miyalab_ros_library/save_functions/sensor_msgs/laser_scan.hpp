@@ -16,10 +16,10 @@
 namespace MiYALAB {
 namespace ROS2{
 /**
- * @brief PointCloud save fuction using ascii
+ * @brief LaserScan save fuction 
  * 
  * @param path save file path
- * @param points save points
+ * @param scan save laser scan
  * @return true
  * @return false
  */
