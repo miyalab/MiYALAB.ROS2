@@ -6,6 +6,7 @@
 //-----------------------------
 // STL
 #include <fstream>
+#include <filesystem>
 
 // ROS2
 #include <geometry_msgs/msg/pose_stamped.hpp>
@@ -44,7 +45,7 @@ static inline bool savePoseStamped(const std::string &path, const geometry_msgs:
         << pose.pose.position.z << ","
         << pose_pose_orientation.x << ","
         << pose_pose_orientation.y << ","
-        << pose_pose_orientation.z << ","
+        << pose_pose_orientation.z
         << std::endl;
 
     return true;

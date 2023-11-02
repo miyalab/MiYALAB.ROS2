@@ -40,7 +40,7 @@ static bool saveLaserScan(const std::string &path, const sensor_msgs::msg::Laser
     ofs << "ANGLE RANGE," << scan.angle_min << "," << scan.angle_max << std::endl;
     ofs << "ANGLE INCREMENT," << scan.angle_increment << std::endl;
     ofs << "SCAN TIME," << scan.scan_time << std::endl;
-    ofs << "TIME INCREMENT," << scan.scan_time << std:::endl;
+    ofs << "TIME INCREMENT," << scan.scan_time << std::endl;
     ofs << "DATA SET:" << std::endl;
     ofs << "RANGE, INTENSITY" << std::endl;
 
