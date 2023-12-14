@@ -39,10 +39,13 @@ static bool savePointCloudAscii(const std::string &path, const sensor_msgs::msg:
         << "FIELDS x y z";
     for(int i=0; i<channel_size; i++) ofs << " " << points.channels[i].name;
     ofs << std::endl 
-        << "SIZE 4 4 4" << std::endl;
+        << "SIZE 4 4 4";
     for(int i=0; i<channel_size; i++) ofs << " 4";
+    ofs << std::endl
+        << "TYPE F F F";
+    for(int i=0; i<channel_size; i++) ofs << " F";
     ofs << std::endl 
-        << "COUNT 1 1 1" << std::endl;
+        << "COUNT 1 1 1";
     for(int i=0; i<channel_size; i++) ofs << " 1";
     ofs << std::endl 
         << "WIDTH " << points_size << std::endl

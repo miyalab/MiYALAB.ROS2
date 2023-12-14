@@ -53,7 +53,7 @@ PointCloud2Viewer::PointCloud2Viewer(rclcpp::NodeOptions options) : rclcpp::Node
 {
     // Using placeholders
     using std::placeholders::_1;
-
+    
     // Initialize parameters
     RCLCPP_INFO(this->get_logger(), "Initialize parameters...");
     m_resolution = this->declare_parameter("point_cloud2_viewer.resolution", 0.5);
