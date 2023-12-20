@@ -57,6 +57,14 @@ static inline void toPointCloud(const sensor_msgs::msg::LaserScan &laser, sensor
     *points = MiYALAB::ROS2::toPointCloud(laser);
 }
 
+/**
+ * @brief Convert PointCloud2 to PointCloud
+ * 
+ * @param input  PointCloud2 type value
+ * @param output PointCloud type value
+ * @return true 
+ * @return false 
+ */
 static inline bool toPointCloud(const sensor_msgs::msg::PointCloud2 &input, sensor_msgs::msg::PointCloud *output)
 {
     if(input.data.empty()) return false;
