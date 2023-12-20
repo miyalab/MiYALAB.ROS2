@@ -102,6 +102,7 @@ void LaserScanViewer::run()
         cv::Mat frame(frame_size, CV_8UC3, this->m_background_color);
         RCLCPP_INFO(this->get_logger(), "---");
         RCLCPP_INFO(this->get_logger(), "stamp: %d.%09d", msg_ptr->header.stamp.sec, msg_ptr->header.stamp.nanosec);
+        RCLCPP_INFO(this->get_logger(), "frame_id: %s", msg_ptr->header.frame_id.c_str());
         RCLCPP_INFO(this->get_logger(), "range_range: %.3f - %.3f", msg_ptr->range_min, msg_ptr->range_max);
         RCLCPP_INFO(this->get_logger(), "angle_range: %.3f - %.3f", msg_ptr->angle_min * TO_DEG, msg_ptr->angle_max * TO_DEG);
         RCLCPP_INFO(this->get_logger(), "angle++: %f", msg_ptr->angle_increment * TO_DEG);

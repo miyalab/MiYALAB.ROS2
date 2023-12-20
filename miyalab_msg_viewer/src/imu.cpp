@@ -89,11 +89,8 @@ RCLCPP_INFO_STREAM(this->get_logger(), this->get_name() << " has started. thread
         if(!imu_ptr.get()) continue;
 
         RCLCPP_INFO(this->get_logger(), "---");
-        RCLCPP_INFO(this->get_logger(), "header: id=%s [%d.%09d]",
-            imu_ptr->header.frame_id.c_str(),
-            imu_ptr->header.stamp.sec,
-            imu_ptr->header.stamp.nanosec
-        );
+        RCLCPP_INFO(this->get_logger(), "stamp: %d.%09d", imu_ptr->header.stamp.sec, imu_ptr->header.stamp.nanosec);
+        RCLCPP_INFO(this->get_logger(), "frame_id: %s", imu_ptr->header.frame_id.c_str());
         RCLCPP_INFO(this->get_logger(), "acceleration : x=%.3f, y=%.3f, z=%.3f",
             imu_ptr->linear_acceleration.x,
             imu_ptr->linear_acceleration.y,

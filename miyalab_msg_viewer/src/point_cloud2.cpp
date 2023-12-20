@@ -8,15 +8,20 @@
 
 // ROS2
 #include <rclcpp/rclcpp.hpp>
+#include <sensor_msgs/msg/point_cloud.hpp>
+// #include <sensor_msgs/point_cloud_conversion.hpp>
 
 // OpenCV
 #include <opencv2/opencv.hpp>
+
+#include <miyalab_ros_library/type_converter/sensor_msgs/to_point_cloud.hpp>
 
 #include "miyalab_msg_viewer/point_cloud2.hpp"
 
 //-----------------------------
 // namespace & using
 //-----------------------------
+using sensor_msgs::msg::PointCloud;
 using sensor_msgs::msg::PointCloud2;
 
 //-----------------------------
@@ -109,16 +114,32 @@ void PointCloud2Viewer::run()
         m_mutex.unlock();
         if(!points_ptr.get()) continue;
 
-        cv::Size frame_size(2*(m_range_x/m_resolution)+1, 2*(m_range_y/m_resolution)+1);
-        cv::Mat frame(frame_size, CV_8UC3, m_background_color);
         RCLCPP_INFO(this->get_logger(), "---");
+
         RCLCPP_INFO(this->get_logger(), "stamp: %d.%09d", points_ptr->header.stamp.sec, points_ptr->header.stamp.nanosec);
+        RCLCPP_INFO(this->get_logger(), "frame_id: %s", points_ptr->header.frame_id.c_str());
         RCLCPP_INFO(this->get_logger(), "bigendian: %s", points_ptr->is_bigendian ? "YES" : "NO");
         for(int i=0, size=points_ptr->fields.size(); i<size; i++){
             RCLCPP_INFO(this->get_logger(), "field[%d]: %s", i, points_ptr->fields[i].name.c_str());
-            RCLCPP_INFO(this->get_logger(), "datatype: %s", DATATYPE_STR[points_ptr->fields[i].datatype]);
-            RCLCPP_INFO(this->get_logger(), "offset  : %d", points_ptr->fields[i].offset);
-            RCLCPP_INFO(this->get_logger(), "count   : %d", points_ptr->fields[i].count);
+            RCLCPP_INFO(this->get_logger(), "--datatype: %s", DATATYPE_STR[points_ptr->fields[i].datatype]);
+            RCLCPP_INFO(this->get_logger(), "--offset  : %d", points_ptr->fields[i].offset);
+            RCLCPP_INFO(this->get_logger(), "--count   : %d", points_ptr->fields[i].count);
+        }
+
+        PointCloud points;
+        cv::Size frame_size(2*(m_range_x/m_resolution)+1, 2*(m_range_y/m_resolution)+1);
+        cv::Mat frame(frame_size, CV_8UC3, m_background_color);
+        // if(sensor_msgs::convertPointCloud2ToPointCloud(*points_ptr.get(), points)){
+        if(MiYALAB::ROS2::toPointCloud(*points_ptr, &points)){
+           for(int i=0, size=points.points.size(); i<size; i++){
+                int x = frame.cols/2 - points.points[i].y/m_resolution;
+                int y = frame.rows/2 - points.points[i].x/m_resolution;
+
+                if(x<0 || frame.cols<=x) continue;
+                if(y<0 || frame.rows<=y) continue;
+
+                frame.at<cv::Vec3b>(y,x) = m_point_color;
+            }
         }
 
         cv::imshow(m_subscriber->get_topic_name(), frame);

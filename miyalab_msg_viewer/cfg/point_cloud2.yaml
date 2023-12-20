@@ -1,4 +1,4 @@
-point_cloud_viewer:
+point_cloud2_viewer:
   resolution: 0.05
   range:
     x: 10.0

@@ -90,12 +90,8 @@ void OdometryViewer::run()
         if(!odom_ptr.get()) continue;
 
         RCLCPP_INFO(this->get_logger(), "---");
-        RCLCPP_INFO(this->get_logger(), "header: id=%s [%d.%09d]",
-            odom_ptr->header.frame_id.c_str(),
-            odom_ptr->header.stamp.sec,
-            odom_ptr->header.stamp.nanosec
-        );
-
+        RCLCPP_INFO(this->get_logger(), "stamp: %d.%09d", odom_ptr->header.stamp.sec, odom_ptr->header.stamp.nanosec);
+        RCLCPP_INFO(this->get_logger(), "frame_id: %s", odom_ptr->header.frame_id.c_str());
         RCLCPP_INFO(this->get_logger(), "child_id: %s", odom_ptr->child_frame_id.c_str());
 
         RCLCPP_INFO(this->get_logger(), "Position     : x=%.3f, y=%.3f, z=%.3f",

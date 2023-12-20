@@ -102,15 +102,15 @@ void PointCloudViewer::run()
         cv::Size frame_size(2*(m_range_x/m_resolution)+1, 2*(m_range_y/m_resolution)+1);
         cv::Mat frame(frame_size, CV_8UC3, m_background_color);
         RCLCPP_INFO(this->get_logger(), "---");
-        RCLCPP_INFO(this->get_logger(), "frame_id: %s", points_ptr->header.frame_id.c_str());
         RCLCPP_INFO(this->get_logger(), "stamp: %d.%09d", points_ptr->header.stamp.sec, points_ptr->header.stamp.nanosec);
+        RCLCPP_INFO(this->get_logger(), "frame_id: %s", points_ptr->header.frame_id.c_str());
         for(int i=0, size=points_ptr->channels.size(); i<size; i++){
             RCLCPP_INFO(this->get_logger(), "channel[%d]: %s", i, points_ptr->channels[i].name.c_str());
         }
 
         for(int i=0, size=points_ptr->points.size(); i<size; i++){
             int x = frame.cols/2 - points_ptr->points[i].y/m_resolution;
-            int y = frame.cols/2 - points_ptr->points[i].x/m_resolution;
+            int y = frame.rows/2 - points_ptr->points[i].x/m_resolution;
 
             if(x<0 || frame.cols<=x) continue;
             if(y<0 || frame.rows<=y) continue;
