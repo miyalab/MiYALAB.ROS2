@@ -71,8 +71,8 @@ static inline bool toPointCloud(const sensor_msgs::msg::PointCloud2 &input, sens
     for(int i=0; i<channel_size; i++) output->channels[i].values.resize(points_size);
     
     unsigned char xyz_check = 0;
-    int *fields_channel = new int[field_size]{-1};
-    int *fields_length = new int[field_size]{0};
+    std::vector<int> fields_channel(field_size);
+    std::vector<int> fields_length(field_size);
     for(int i=0, channel_index=0; i<field_size; i++){
         switch(input.fields[i].datatype){
         case sensor_msgs::msg::PointField::FLOAT64:
@@ -114,12 +114,14 @@ static inline bool toPointCloud(const sensor_msgs::msg::PointCloud2 &input, sens
                 for(int k=0; k<fields_length[j]; k++) data[k] = input.data[index + k];
             }
             
+            // 格納先
             float *value;
             if(input.fields[j].name == "x")      value = &output->points[i].x;
             else if(input.fields[j].name == "y") value = &output->points[i].y;
             else if(input.fields[j].name == "z") value = &output->points[i].z;
             else value = &output->channels[fields_channel[j]].values[i];
 
+            // データ格納
             if(input.fields[j].datatype == sensor_msgs::msg::PointField::FLOAT64)      *value = *(double*)(data);
             else if(input.fields[j].datatype == sensor_msgs::msg::PointField::FLOAT32) *value = *(float*)(data);
             else if(input.fields[j].datatype == sensor_msgs::msg::PointField::UINT32)  *value = *(uint32_t*)(data);
@@ -133,8 +135,6 @@ static inline bool toPointCloud(const sensor_msgs::msg::PointCloud2 &input, sens
         }
     }
 
-    delete fields_channel;
-    delete fields_length;
     return true;
 }
 }

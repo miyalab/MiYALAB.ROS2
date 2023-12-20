@@ -9,11 +9,11 @@
 // ROS2
 #include <rclcpp/rclcpp.hpp>
 #include <sensor_msgs/msg/point_cloud.hpp>
-// #include <sensor_msgs/point_cloud_conversion.hpp>
 
 // OpenCV
 #include <opencv2/opencv.hpp>
 
+// MiYALAB
 #include <miyalab_ros_library/type_converter/sensor_msgs/to_point_cloud.hpp>
 
 #include "miyalab_msg_viewer/point_cloud2.hpp"
@@ -129,7 +129,6 @@ void PointCloud2Viewer::run()
         PointCloud points;
         cv::Size frame_size(2*(m_range_x/m_resolution)+1, 2*(m_range_y/m_resolution)+1);
         cv::Mat frame(frame_size, CV_8UC3, m_background_color);
-        // if(sensor_msgs::convertPointCloud2ToPointCloud(*points_ptr.get(), points)){
         if(MiYALAB::ROS2::toPointCloud(*points_ptr, &points)){
            for(int i=0, size=points.points.size(); i<size; i++){
                 int x = frame.cols/2 - points.points[i].y/m_resolution;
