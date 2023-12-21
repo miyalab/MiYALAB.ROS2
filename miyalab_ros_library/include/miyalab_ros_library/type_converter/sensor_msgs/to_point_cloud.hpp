@@ -67,7 +67,7 @@ static inline void toPointCloud(const sensor_msgs::msg::LaserScan &laser, sensor
  */
 static inline bool toPointCloud(const sensor_msgs::msg::PointCloud2 &input, sensor_msgs::msg::PointCloud *output)
 {
-    constexpr int DATA_SIZE[] = {0,1,1,2,2,4,4,4,8};
+    constexpr int DATA_SIZE[] = {0, 1, 1, 2, 2, 4, 4, 4, 8};
 
     if(input.data.empty()) return false;
 
