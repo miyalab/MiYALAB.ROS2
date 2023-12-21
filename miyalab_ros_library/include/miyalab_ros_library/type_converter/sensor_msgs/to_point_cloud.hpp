@@ -67,39 +67,22 @@ static inline void toPointCloud(const sensor_msgs::msg::LaserScan &laser, sensor
  */
 static inline bool toPointCloud(const sensor_msgs::msg::PointCloud2 &input, sensor_msgs::msg::PointCloud *output)
 {
+    constexpr int DATA_SIZE[] = {0,1,1,2,2,4,4,4,8};
+
     if(input.data.empty()) return false;
 
     int points_size = input.width * input.height;
-    int field_size  = input.fields.size();
-    int channel_size = field_size - 3;
+    int fields_size  = input.fields.size();
+    int channels_size = fields_size - 3;
 
     output->header = input.header;
     output->points.resize(points_size);
-    output->channels.resize(channel_size);
-    for(int i=0; i<channel_size; i++) output->channels[i].values.resize(points_size);
+    output->channels.resize(channels_size);
+    for(int i=0; i<channels_size; i++) output->channels[i].values.resize(points_size);
     
     unsigned char xyz_check = 0;
-    std::vector<int> fields_channel(field_size);
-    std::vector<int> fields_length(field_size);
-    for(int i=0, channel_index=0; i<field_size; i++){
-        switch(input.fields[i].datatype){
-        case sensor_msgs::msg::PointField::FLOAT64:
-            fields_length[i] = 8;
-            break;
-        case sensor_msgs::msg::PointField::FLOAT32:
-        case sensor_msgs::msg::PointField::UINT32:
-        case sensor_msgs::msg::PointField::INT32:
-            fields_length[i] = 4;
-            break;
-        case sensor_msgs::msg::PointField::UINT16:
-        case sensor_msgs::msg::PointField::INT16:
-            fields_length[i] = 2;
-            break;
-        case sensor_msgs::msg::PointField::UINT8:
-        case sensor_msgs::msg::PointField::INT8:
-            fields_length[i] = 1;
-            break;
-        }
+    std::vector<int> fields_channel(fields_size);
+    for(int i=0, channel_index=0; i<fields_size; i++){
         if(input.fields[i].name == "x")      xyz_check |= 0x01;
         else if(input.fields[i].name == "y") xyz_check |= 0x02;
         else if(input.fields[i].name == "z") xyz_check |= 0x04;
@@ -110,36 +93,36 @@ static inline bool toPointCloud(const sensor_msgs::msg::PointCloud2 &input, sens
         }
     }
     if(xyz_check != 0x07) return false;
-    
     for(int i=0; i<points_size; i++){
-        for(int j=0; j<field_size; j++){
-            unsigned char *data = new unsigned char[fields_length[j]];
-            int index = input.point_step * i + input.fields[j].offset;
-            if(input.is_bigendian){
-                for(int k=0; k<fields_length[j]; k++) data[k] = input.data[index + fields_length[j] - 1 - k];
-            }
-            else{
-                for(int k=0; k<fields_length[j]; k++) data[k] = input.data[index + k];
-            }
-            
+        for(int j=0; j<fields_size; j++){
             // 格納先
             float *value;
             if(input.fields[j].name == "x")      value = &output->points[i].x;
             else if(input.fields[j].name == "y") value = &output->points[i].y;
             else if(input.fields[j].name == "z") value = &output->points[i].z;
             else value = &output->channels[fields_channel[j]].values[i];
-
+            
             // データ格納
-            if(input.fields[j].datatype == sensor_msgs::msg::PointField::FLOAT64)      *value = *(double*)(data);
-            else if(input.fields[j].datatype == sensor_msgs::msg::PointField::FLOAT32) *value = *(float*)(data);
-            else if(input.fields[j].datatype == sensor_msgs::msg::PointField::UINT32)  *value = *(uint32_t*)(data);
-            else if(input.fields[j].datatype == sensor_msgs::msg::PointField::INT32)   *value = *(int32_t*)(data);
-            else if(input.fields[j].datatype == sensor_msgs::msg::PointField::UINT16)  *value = *(uint16_t*)(data);
-            else if(input.fields[j].datatype == sensor_msgs::msg::PointField::INT16)   *value = *(int16_t*)(data);
-            else if(input.fields[j].datatype == sensor_msgs::msg::PointField::UINT8)   *value = *(uint8_t*)(data);
-            else if(input.fields[j].datatype == sensor_msgs::msg::PointField::INT8)    *value = *(int8_t*)(data);
+            uint8_t *data_ptr;
+            int index = input.point_step * i + input.fields[j].offset;
+            if((input.is_bigendian && __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__) || (!input.is_bigendian && __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__)){
+                data_ptr = (uint8_t*)&input.data[index];
+            }
+            else{
+                uint8_t data[8];
+                index += DATA_SIZE[input.fields[j].datatype] - 1;
+                for(int k=0; k<DATA_SIZE[input.fields[j].datatype]; k++) data[k] = input.data[index - k];
+                data_ptr = data;
+            }
 
-            delete data;
+            if(input.fields[j].datatype == sensor_msgs::msg::PointField::FLOAT64)      *value = *(double*)(data_ptr);
+            else if(input.fields[j].datatype == sensor_msgs::msg::PointField::FLOAT32) *value = *(float*)(data_ptr);
+            else if(input.fields[j].datatype == sensor_msgs::msg::PointField::UINT32)  *value = *(uint32_t*)(data_ptr);
+            else if(input.fields[j].datatype == sensor_msgs::msg::PointField::INT32)   *value = *(int32_t*)(data_ptr);
+            else if(input.fields[j].datatype == sensor_msgs::msg::PointField::UINT16)  *value = *(uint16_t*)(data_ptr);
+            else if(input.fields[j].datatype == sensor_msgs::msg::PointField::INT16)   *value = *(int16_t*)(data_ptr);
+            else if(input.fields[j].datatype == sensor_msgs::msg::PointField::UINT8)   *value = *(uint8_t*)(data_ptr);
+            else if(input.fields[j].datatype == sensor_msgs::msg::PointField::INT8)    *value = *(int8_t*)(data_ptr);
         }
     }
 
