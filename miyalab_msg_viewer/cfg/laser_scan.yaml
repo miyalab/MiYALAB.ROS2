@@ -1,8 +1,8 @@
 laser_scan_viewer:
-  resolution: 0.05
+  resolution: 0.01
   range:
-    x: 10.0
-    y: 10.0
+    x: 5.0
+    y: 5.0
   background_color:
     r: 200
     g: 200
@@ -11,3 +11,11 @@ laser_scan_viewer:
     r: 0
     g: 0
     b: 0
+  chart:
+    enable: true
+    range: 1.0
+    angle: 45.0
+    color:
+      r: 0
+      g: 0
+      b: 255

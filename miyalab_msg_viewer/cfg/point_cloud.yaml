@@ -11,3 +11,12 @@ point_cloud_viewer:
     r: 0
     g: 0
     b: 0
+  chart:
+    enable: true
+    range: 1.0
+    angle: 45.0
+    color:
+      r: 0
+      g: 0
+      b: 255
+  

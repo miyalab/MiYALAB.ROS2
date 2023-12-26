@@ -43,10 +43,16 @@ private:
     rclcpp::Subscription<sensor_msgs::msg::LaserScan>::SharedPtr m_subscriber;
     void onMsgSubscribed(const sensor_msgs::msg::LaserScan::SharedPtr msg);
     
-    double m_resolution = -1;
-    double m_range_x = -1, m_range_y = -1;
-    cv::Vec3b m_background_color = {0,0,0};
-    cv::Vec3b m_point_color = {255,255,255};
+    struct Param{
+        double resolution;
+        double range_x, range_y;
+        cv::Vec3b background_color;
+        cv::Vec3b point_color;
+        bool chart_enable;
+        int chart_range_increment;
+        double chart_angle_increment;
+        cv::Vec3b chart_color;
+    } m_param;
     std::unique_ptr<std::thread> m_thread;
     void run();
 };
