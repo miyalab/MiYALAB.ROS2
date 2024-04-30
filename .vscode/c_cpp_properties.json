@@ -11,10 +11,10 @@
         "${workspaceFolder}/miyalab_msg_viewer/include/**",
         "${workspaceFolder}/miyalab_manual_robot_controller/include/**",
         "${workspaceFolder}/miyalab_obstacle_detector/include/**",
+        "${workspaceFolder}/miyalab_pc_status_publisher/include/**",
         "~/workspace/ros2_ws/install/miyalab_interfaces/include/**",
         "~/workspace/ros2_ws/install/miyalab_ros_library/include/**",
         "/opt/ros/humble/include/**",
-        // "/opt/ros/foxy/include/**",
         "/usr/include/**"
       ],
       "name": "ROS",

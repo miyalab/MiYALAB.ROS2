@@ -31,6 +31,7 @@ set(msg_files
   msg/Obstacle.msg
   msg/ObstacleArray.msg
   msg/Vector3DArray.msg
+  msg/PCStatus.msg
 )
 set(srv_files
   srv/SetInt32.srv

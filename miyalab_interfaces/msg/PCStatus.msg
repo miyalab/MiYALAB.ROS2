@@ -1,0 +1,5 @@
+std_msgs/Header header
+float32 cpu_freq
+float32 cpu_usage
+float32 cpu_temperature
+float32 memory_usage
