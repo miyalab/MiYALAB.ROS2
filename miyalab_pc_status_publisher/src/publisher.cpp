@@ -69,11 +69,19 @@ void PCStatusPublisher::run()
         msg->header.stamp = this->now();
 
         // CPU周波数
-        auto ifs = std::ifstream("/sys/devices/system/cpu/cpufreq/policy0/puinfo_cur_freq");
+        auto ifs = std::ifstream("/proc/cpuinfo");
         if(ifs){
             std::string line = "";
-            std::getline(ifs, line);
-            std::sscanf(line.c_str(), "%f", &msg->cpu_freq);
+            while(std::getline(ifs, line)){
+                float freq = 0.0;
+                std::sscanf(line.c_str(), "cpu MHz :%f", &freq);
+                if(freq != 0.0){
+                    msg->cpu_freq.emplace_back(freq);
+                }
+            }
+            // std::string line = "";
+            // std::getline(ifs, line);
+            // std::sscanf(line.c_str(), "%f", &msg->cpu_freq);
             ifs.close();
         }
 
