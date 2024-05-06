@@ -4,7 +4,7 @@ float64             distance        # 総移動距離
 float64             rotation        # 総旋回量
 float64             temperature     # ロボット内部温度
 float64             cpu_temperature # CPU温度
-int32[]             encoder         # ロータリーエンコーダパルス計数値
+int64[]             encoder         # ロータリーエンコーダパルス計数値
 float64[]           pwm             # モータPWM
 float64[]           rpm             # モータ回転数
 float64[]           current         # モータ電流値

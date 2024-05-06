@@ -1,0 +1,6 @@
+---
+bool success
+int64 cpu_count_cores
+float64[] cpu_freq_min
+float64[] cpu_freq_max
+float64 memory_size

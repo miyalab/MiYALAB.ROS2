@@ -31,7 +31,7 @@ set(msg_files
   msg/Obstacle.msg
   msg/ObstacleArray.msg
   msg/Vector3DArray.msg
-  msg/PCStatus.msg
+  msg/ComputerStatus.msg
 )
 set(srv_files
   srv/SetInt32.srv
@@ -42,6 +42,7 @@ set(srv_files
   srv/SetPose.srv
   srv/ResetRobotState.srv
   srv/GetCameraParameter.srv
+  srv/GetComputerInfo.srv
 )
 rosidl_generate_interfaces(${PROJECT_NAME}
   ${msg_files}

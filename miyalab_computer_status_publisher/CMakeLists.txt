@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-project(miyalab_pc_status_publisher)
+project(miyalab_computer_status_publisher)
 
 # Default to C99
 if(NOT CMAKE_C_STANDARD)
@@ -33,7 +33,7 @@ ament_target_dependencies(${PROJECT_NAME}
   rclcpp_components
   miyalab_interfaces
 )
-rclcpp_components_register_node(${PROJECT_NAME} PLUGIN "MiYALAB::ROS2::PCStatusPublisher" EXECUTABLE pc_node)
+rclcpp_components_register_node(${PROJECT_NAME} PLUGIN "MiYALAB::ROS2::ComputerStatusPublisher" EXECUTABLE computer_node)
 
 install(TARGETS ${PROJECT_NAME} DESTINATION lib)
 
