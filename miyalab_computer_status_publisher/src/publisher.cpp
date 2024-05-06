@@ -211,18 +211,18 @@ void ComputerStatusPublisher::run()
             ifs.close();
             for(int j=1; ifs = std::ifstream("/sys/class/hwmon/hwmon" + std::to_string(i) + "/temp" + std::to_string(j) + "_input"); j++){
                 sensor_msgs::msg::Temperature temp;
+                temp.header.frame_id = dev_name;
+                temp.header.stamp = msg->header.stamp;
+
                 std::string line;
                 std::getline(ifs, line);
                 ifs.close();
                 sscanf(line.c_str(), "%lf", &temp.temperature);
                 temp.temperature /= 1000.0;
 
-                line = "";
                 ifs = std::ifstream("/sys/class/hwmon/hwmon" + std::to_string(i) + "/temp" + std::to_string(j) + "_label");
-                std::getline(ifs, line);
+                if(std::getline(ifs, line)) temp.header.frame_id += " " + line;
                 ifs.close();
-                temp.header.stamp = msg->header.stamp;
-                temp.header.frame_id = dev_name + " " + line;
 
                 msg->temperatures.emplace_back(temp);
             }

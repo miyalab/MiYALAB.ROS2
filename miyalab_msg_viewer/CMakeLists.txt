@@ -25,6 +25,7 @@ find_package(nav_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(OpenCV REQUIRED core highgui)
 find_package(cv_bridge REQUIRED)
+find_package(miyalab_interfaces REQUIRED)
 find_package(miyalab_ros_library REQUIRED)
 
 include_directories(
@@ -37,6 +38,7 @@ add_library(${PROJECT_NAME} SHARED
   src/point_cloud.cpp
   src/point_cloud2.cpp
   src/odometry.cpp
+  src/computer_status.cpp
 )
 ament_target_dependencies(${PROJECT_NAME} 
   rclcpp
@@ -48,6 +50,7 @@ ament_target_dependencies(${PROJECT_NAME}
   OpenCV
   cv_bridge
   miyalab_ros_library
+  miyalab_interfaces
 )
 
 rclcpp_components_register_node(${PROJECT_NAME} PLUGIN "MiYALAB::ROS2::OdometryViewer" EXECUTABLE "odometry_msg_viewer_node")
@@ -56,6 +59,7 @@ rclcpp_components_register_node(${PROJECT_NAME} PLUGIN "MiYALAB::ROS2::ImageView
 rclcpp_components_register_node(${PROJECT_NAME} PLUGIN "MiYALAB::ROS2::ImuViewer" EXECUTABLE "imu_msg_viewer")
 rclcpp_components_register_node(${PROJECT_NAME} PLUGIN "MiYALAB::ROS2::PointCloudViewer" EXECUTABLE "point_cloud_viewer")
 rclcpp_components_register_node(${PROJECT_NAME} PLUGIN "MiYALAB::ROS2::PointCloud2Viewer" EXECUTABLE "point_cloud2_viewer")
+rclcpp_components_register_node(${PROJECT_NAME} PLUGIN "MiYALAB::ROS2::ComputerStatusViewer" EXECUTABLE "computer_status_viewer")
 install(TARGETS ${PROJECT_NAME} DESTINATION lib)
 
 # yaml
