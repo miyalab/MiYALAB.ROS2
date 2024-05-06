@@ -8,6 +8,9 @@
 #include <functional>
 #include <filesystem>
 
+// linux
+#include <sys/times.h>
+
 // ROS2
 #include <rclcpp/rclcpp.hpp>
 
@@ -50,7 +53,8 @@ ComputerStatusPublisher::ComputerStatusPublisher(rclcpp::NodeOptions options) : 
     m_computer_info_server = this->create_service<miyalab_interfaces::srv::GetComputerInfo>("~/get_computer_info", std::bind(&ComputerStatusPublisher::serviceGetComputerInfo, this, _1, _2, _3));
     RCLCPP_INFO(this->get_logger(), "Complete! Service-servers were initialized.");
 
-    readPCInfo();
+    // Initialize computer info
+    readComputerInfo();
 
     // Main loop processing
     m_thread = std::make_unique<std::thread>(&ComputerStatusPublisher::run, this);
@@ -66,7 +70,7 @@ ComputerStatusPublisher::~ComputerStatusPublisher()
     m_thread.release();
 }
 
-void ComputerStatusPublisher::readPCInfo()
+void ComputerStatusPublisher::readComputerInfo()
 {
     m_computer_info_response = std::make_shared<miyalab_interfaces::srv::GetComputerInfo::Response>();
 
@@ -106,6 +110,12 @@ void ComputerStatusPublisher::readPCInfo()
         }
     }
 
+    // CPU現在周波数ファイル有無チェック
+    m_class_cpu_file_exists = true;
+    for(int i=0; i<m_computer_info_response->cpu_count_cores && m_class_cpu_file_exists; i++){
+        m_class_cpu_file_exists = std::filesystem::exists("/sys/devices/system/cpu/cpu" + std::to_string(i) + "/cpufreq/scaling_cur_freq");
+    }
+
     // メモリ情報
     auto ifs = std::ifstream("/proc/meminfo");
     m_computer_info_response->memory_size = std::numeric_limits<double>::quiet_NaN();
@@ -123,9 +133,13 @@ void ComputerStatusPublisher::readPCInfo()
     // DEBUG
     RCLCPP_INFO(this->get_logger(), "count cores: %ld", m_computer_info_response->cpu_count_cores);
     for(int i=0; i<m_computer_info_response->cpu_count_cores; i++){
-        RCLCPP_INFO(this->get_logger(), "core %d: (%lf MHz,%lf MHz)", i, m_computer_info_response->cpu_freq_min[i], m_computer_info_response->cpu_freq_max[i]);
+        RCLCPP_INFO(this->get_logger(), "core %d: (%.0lf MHz, %.0lf MHz)", 
+            i, 
+            m_computer_info_response->cpu_freq_min[i], 
+            m_computer_info_response->cpu_freq_max[i]
+        );
     }
-    RCLCPP_INFO(this->get_logger(), "memory size: %lf MB", m_computer_info_response->memory_size);
+    RCLCPP_INFO(this->get_logger(), "memory size: %.0lf MB", m_computer_info_response->memory_size);
 }
 
 void ComputerStatusPublisher::serviceGetComputerInfo(const std::shared_ptr<rmw_request_id_t> header, 
@@ -155,6 +169,8 @@ void ComputerStatusPublisher::run()
     m_computer_info_mutex.unlock();
     
     // Main loop
+    long pre_tick = 0;
+    clock_t pre_time = times(NULL);
     for(rclcpp::WallRate loop(m_rate); rclcpp::ok(); loop.sleep()){
         auto msg = std::make_unique<miyalab_interfaces::msg::ComputerStatus>();
 
@@ -162,21 +178,35 @@ void ComputerStatusPublisher::run()
         msg->header.stamp = this->now();
 
         // CPU周波数
-        auto ifs = std::ifstream("/proc/cpuinfo");
-        if(ifs){
-            std::string line = "";
-            while(std::getline(ifs, line)){
-                double freq = 0.0;
-                std::sscanf(line.c_str(), "cpu MHz :%lf", &freq);
-                if(freq != 0.0) msg->cpu_freq.emplace_back(freq);
+        msg->cpu_freq.resize(cpu_count_cores);
+        if(m_class_cpu_file_exists){
+            for(int i=0; i<cpu_count_cores; i++){
+                std::string line;
+                auto ifs = std::ifstream("/sys/devices/system/cpu/cpu" + std::to_string(i) + "/cpufreq/scaling_cur_freq");
+                std::getline(ifs, line);
+                ifs.close();
+                sscanf(line.c_str(), "%lf", &msg->cpu_freq[i]);
+                msg->cpu_freq[i] /= 1000.0;
             }
-            ifs.close();
+        }
+        else{
+            auto ifs = std::ifstream("/proc/cpuinfo");
+            if(ifs){
+                std::string line = "";
+                int processor_id = -1;
+                double freq = 0.0;
+                while(std::getline(ifs, line)){
+                    std::sscanf(line.c_str(), "processor : %d", &processor_id);
+                    if(std::sscanf(line.c_str(), "cpu MHz : %lf", &freq) == 1) msg->cpu_freq[processor_id] = freq;
+                }
+                ifs.close();
+            }
         }
 
         // CPU温度
         for(int i=0; std::filesystem::exists("/sys/class/hwmon/hwmon" + std::to_string(i)); i++){
             std::string dev_name;
-            ifs = std::ifstream("/sys/class/hwmon/hwmon" + std::to_string(i) + "/name");
+            auto ifs = std::ifstream("/sys/class/hwmon/hwmon" + std::to_string(i) + "/name");
             std::getline(ifs, dev_name);
             ifs.close();
             for(int j=1; ifs = std::ifstream("/sys/class/hwmon/hwmon" + std::to_string(i) + "/temp" + std::to_string(j) + "_input"); j++){
@@ -185,7 +215,9 @@ void ComputerStatusPublisher::run()
                 std::getline(ifs, line);
                 ifs.close();
                 sscanf(line.c_str(), "%lf", &temp.temperature);
+                temp.temperature /= 1000.0;
 
+                line = "";
                 ifs = std::ifstream("/sys/class/hwmon/hwmon" + std::to_string(i) + "/temp" + std::to_string(j) + "_label");
                 std::getline(ifs, line);
                 ifs.close();
@@ -197,7 +229,7 @@ void ComputerStatusPublisher::run()
         }
 
         // メモリ使用率
-        ifs = std::ifstream("/proc/meminfo");
+        auto ifs = std::ifstream("/proc/meminfo");
         msg->memory_usage = std::numeric_limits<double>::quiet_NaN();
         if(ifs){
             double free = 1.0;
@@ -205,6 +237,23 @@ void ComputerStatusPublisher::run()
             ifs.close();
             msg->memory_usage = 1.0 - (free/1024.0 / memory_size);
         }
+
+        // CPU使用率
+        ifs = std::ifstream("/proc/stat");
+        if(ifs){
+            std::string line;
+            std::getline(ifs, line);
+            char name[128];
+            long usr, nice, sys;
+            sscanf(line.c_str(), "%s %ld %ld %ld", name, &usr, &nice, &sys);
+            long tick = usr + nice + sys;
+            clock_t time_now = times(NULL);
+            msg->cpu_usage = (double)(tick - pre_tick) / (time_now - pre_time) / cpu_count_cores;
+
+            pre_tick = tick;
+            pre_time = time_now;
+        }
+        else msg->cpu_usage = std::numeric_limits<double>::quiet_NaN();
 
         // publish
         m_computer_status_publisher->publish(std::move(msg));

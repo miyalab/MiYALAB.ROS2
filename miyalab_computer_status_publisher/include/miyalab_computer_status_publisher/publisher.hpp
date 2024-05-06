@@ -50,10 +50,10 @@ private:
     // 処理用
     int m_rate = -1;
     std::string m_frame_id = "";
-
+    bool m_class_cpu_file_exists;
     std::unique_ptr<std::thread> m_thread;
     void run();
-    void readPCInfo();
+    void readComputerInfo();
 };
 }
 }
