@@ -39,8 +39,8 @@ ComputerStatusPublisher::ComputerStatusPublisher(rclcpp::NodeOptions options) : 
 
     // Initialize parameters
     RCLCPP_INFO(this->get_logger(), "Initialize parameters...");
-    m_rate        = this->declare_parameter("pc_status_publisher.rate", 1);
-    m_frame_id    = this->declare_parameter("pc_status_publisher.frame_id", "computer_status");
+    m_rate        = this->declare_parameter("computer_status_publisher.rate", 1);
+    m_frame_id    = this->declare_parameter("computer_status_publisher.frame_id", "computer_status");
     RCLCPP_INFO(this->get_logger(), "Complete! Parameters were initialized.");
 
     // Initialize publisher

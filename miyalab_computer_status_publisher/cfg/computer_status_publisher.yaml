@@ -1,0 +1,3 @@
+computer_status_publisher:
+  rate: 1
+  frame_id: "computer_status"
