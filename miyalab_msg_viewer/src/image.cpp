@@ -87,7 +87,7 @@ void ImageViewer::run()
         if(image_ptr->data.empty()) continue;
 
         RCLCPP_INFO(this->get_logger(), "---");
-        RCLCPP_INFO(this->get_logger(), "address: %0x", reinterpret_cast<std::uintptr_t>(image_ptr.get()));
+        RCLCPP_INFO(this->get_logger(), "address: %0lx", reinterpret_cast<std::uintptr_t>(image_ptr.get()));
         RCLCPP_INFO(this->get_logger(), "frame_id: %s", image_ptr->header.frame_id.c_str());
         RCLCPP_INFO(this->get_logger(), "stamp: %d.%09d", image_ptr->header.stamp.sec, image_ptr->header.stamp.nanosec);
         RCLCPP_INFO(this->get_logger(), "encoding: %s", image_ptr->encoding.c_str());

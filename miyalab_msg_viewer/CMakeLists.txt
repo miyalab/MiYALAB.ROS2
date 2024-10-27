@@ -39,6 +39,7 @@ add_library(${PROJECT_NAME} SHARED
   src/point_cloud2.cpp
   src/odometry.cpp
   src/computer_status.cpp
+  src/vehicle_state.cpp
 )
 ament_target_dependencies(${PROJECT_NAME} 
   rclcpp
@@ -60,6 +61,7 @@ rclcpp_components_register_node(${PROJECT_NAME} PLUGIN "MiYALAB::ROS2::ImuViewer
 rclcpp_components_register_node(${PROJECT_NAME} PLUGIN "MiYALAB::ROS2::PointCloudViewer" EXECUTABLE "point_cloud_viewer")
 rclcpp_components_register_node(${PROJECT_NAME} PLUGIN "MiYALAB::ROS2::PointCloud2Viewer" EXECUTABLE "point_cloud2_viewer")
 rclcpp_components_register_node(${PROJECT_NAME} PLUGIN "MiYALAB::ROS2::ComputerStatusViewer" EXECUTABLE "computer_status_viewer")
+rclcpp_components_register_node(${PROJECT_NAME} PLUGIN "MiYALAB::ROS2::VehicleStateViewer" EXECUTABLE "vehicle_state_viewer")
 install(TARGETS ${PROJECT_NAME} DESTINATION lib)
 
 # yaml
