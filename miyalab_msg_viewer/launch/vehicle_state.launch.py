@@ -26,7 +26,7 @@ def generate_launch_description():
                 name='viewer',
                 remappings=[
                     # subscriber
-                    ("/state", "/prominence/status"),
+                    ("/state", "/ProminenceServer/state"),
                 ],
                 extra_arguments=[{'use_intra_process_comms': True}]
             )

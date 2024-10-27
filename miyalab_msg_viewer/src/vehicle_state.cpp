@@ -90,28 +90,28 @@ void VehicleStateViewer::run()
         std::string info = "";
         RCLCPP_INFO(this->get_logger(), "frame id: %s", msg_ptr->header.frame_id.c_str());
 
+        info = "Encoder: ";
+        for(int i=0, size=msg_ptr->encoder.size(); i<size; i++) info += std::to_string(msg_ptr->encoder[i]) + "\t";
+        RCLCPP_INFO(this->get_logger(), info.c_str());
+
         info = "Voltage: ";
-        for(int i=0, size=msg_ptr->motor_voltage.size(); i<size; i++) info += "\t" + std::to_string(msg_ptr->motor_voltage[i]);
+        for(int i=0, size=msg_ptr->motor_voltage.size(); i<size; i++) info += std::to_string(msg_ptr->motor_voltage[i]) + "\t";
         RCLCPP_INFO(this->get_logger(), info.c_str());
 
         info = "Current: ";
-        for(int i=0, size=msg_ptr->motor_current.size(); i<size; i++) info += "\t" + std::to_string(msg_ptr->motor_current[i]);
-        RCLCPP_INFO(this->get_logger(), info.c_str());
-
-        info = "Encoder: ";
-        for(int i=0, size=msg_ptr->encoder.size(); i<size; i++) info += "\t" + std::to_string(msg_ptr->encoder[i]);
+        for(int i=0, size=msg_ptr->motor_current.size(); i<size; i++) info += std::to_string(msg_ptr->motor_current[i]) + "\t";
         RCLCPP_INFO(this->get_logger(), info.c_str());
 
         info = "PwmDuty: ";
-        for(int i=0, size=msg_ptr->motor_pwm.size(); i<size; i++) info += "\t" + std::to_string(msg_ptr->motor_pwm[i]);
+        for(int i=0, size=msg_ptr->motor_pwm.size(); i<size; i++) info += std::to_string(msg_ptr->motor_pwm[i]) + "\t";
         RCLCPP_INFO(this->get_logger(), info.c_str());
 
-        info = "RPM: ";
-        for(int i=0, size=msg_ptr->motor_rpm.size(); i<size; i++) info += "\t" + std::to_string(msg_ptr->motor_rpm[i]);
+        info = "RPM    : ";
+        for(int i=0, size=msg_ptr->motor_rpm.size(); i<size; i++) info += std::to_string(msg_ptr->motor_rpm[i]) + "\t";
         RCLCPP_INFO(this->get_logger(), info.c_str());
 
-        info = "Temp: ";
-        for(int i=0, size=msg_ptr->motor_temperature.size(); i<size; i++) info += "\t" + std::to_string(msg_ptr->motor_temperature[i]);
+        info = "Temp   : ";
+        for(int i=0, size=msg_ptr->motor_temperature.size(); i<size; i++) info += std::to_string(msg_ptr->motor_temperature[i]) + "\t";
         RCLCPP_INFO(this->get_logger(), info.c_str());
 
         RCLCPP_INFO(this->get_logger(), "---");
