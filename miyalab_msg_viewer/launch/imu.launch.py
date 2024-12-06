@@ -26,7 +26,7 @@ def generate_launch_description():
                 name='viewer',
                 remappings=[
                     # subscriber
-                    ("/imu", "/imu"),
+                    ("/imu", "/camera/realsense/imu"),
                 ],
                 extra_arguments=[{'use_intra_process_comms': True}]
             )

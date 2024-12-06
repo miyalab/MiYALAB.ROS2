@@ -26,7 +26,7 @@ def generate_launch_description():
                 name='viewer',
                 remappings=[
                     # subscriber
-                    ("/camera/image", "/camera/image"),
+                    ("/camera/image", "/camera/realsense/color/image_raw"),
                 ],
                 extra_arguments=[{'use_intra_process_comms': True}]
             )

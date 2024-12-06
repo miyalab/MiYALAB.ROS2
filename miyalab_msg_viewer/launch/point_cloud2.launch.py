@@ -27,7 +27,7 @@ def generate_launch_description():
                 parameters=[join(pkg_prefix, "cfg/point_cloud2.yaml")],
                 remappings=[
                     # subscriber
-                    ("/lidar/points", "/camera/depth/color/points"),
+                    ("/lidar/points", "/camera/realsense/depth/color/points"),
                 ],
                 extra_arguments=[{'use_intra_process_comms': True}]
             )

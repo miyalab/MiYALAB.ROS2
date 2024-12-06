@@ -29,7 +29,7 @@ static bool savePointCloudAscii(const std::string &path, const sensor_msgs::msg:
     constexpr char DATA_TYPE[] = " IUIUIUFF";
 
     // empty check
-    if(points.points.empty()) return false;
+    if(points.data.empty()) return false;
 
     // file open
     std::ofstream ofs(path);
@@ -63,7 +63,7 @@ static bool savePointCloudAscii(const std::string &path, const sensor_msgs::msg:
             uint8_t *data_ptr;
             int index = points.point_step * i + points.fields[j].offset;
             if((points.is_bigendian && __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__) || (!points.is_bigendian && __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__)){
-                data_ptr = (uint8_t*)(&data[index]);
+                data_ptr = (uint8_t*)(&data_ptr[index]);
             }
             else{
                 uint8_t data[8];
