@@ -99,4 +99,5 @@
         "rclcpp"
     ],
     "cmake.configureOnOpen": true,
+    "ROS2.distro": "jazzy",
 }
